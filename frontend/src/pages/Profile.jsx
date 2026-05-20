@@ -44,6 +44,7 @@ function Profile() {
                 </p>
                 <div style={{ marginTop: 'var(--space-sm)', display: 'flex', gap: 'var(--space-sm)' }}>
                   <span className="badge badge-emerald">Active</span>
+                  {user?.is_admin && <span className="badge badge-gold">Admin</span>}
                 </div>
               </div>
             </div>

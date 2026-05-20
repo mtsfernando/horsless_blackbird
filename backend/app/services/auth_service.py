@@ -4,6 +4,7 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models.user import User
+from app.models.player import Player
 from app.utils.security import hash_password, verify_password
 
 
@@ -21,13 +22,21 @@ async def get_user_by_email(db: AsyncSession, email: str) -> User | None:
     return result.scalar_one_or_none()
 
 
-async def register_user(db: AsyncSession, email: str, password: str) -> User:
+async def register_user(
+    db: AsyncSession,
+    email: str,
+    password: str,
+    display_name: str | None = None,
+    is_admin: bool = False,
+) -> User:
     """Register a new user account.
 
     Args:
         db: The async database session.
         email: The user's email address.
         password: The plaintext password (will be hashed before storing).
+        display_name: Optional display name for the linked Player profile.
+        is_admin: Whether this user has admin status.
 
     Returns:
         The newly created User instance.
@@ -42,9 +51,19 @@ async def register_user(db: AsyncSession, email: str, password: str) -> User:
     user = User(
         email=email,
         password_hash=hash_password(password),
+        is_admin=is_admin,
     )
     db.add(user)
     await db.flush()
+
+    # Automatically create associated Player profile to avoid 404s in frontend
+    player = Player(
+        user_id=user.id,
+        display_name=display_name or email.split("@")[0],
+    )
+    db.add(player)
+    await db.flush()
+
     await db.refresh(user)
     return user
 

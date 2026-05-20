@@ -11,6 +11,7 @@ class UserCreate(BaseModel):
 
     email: EmailStr
     password: str
+    display_name: str | None = None
 
 
 class UserLogin(BaseModel):
@@ -27,6 +28,8 @@ class UserResponse(BaseModel):
 
     id: uuid.UUID
     email: str
+    is_admin: bool
+    display_name: str | None = None
     created_at: datetime
 
 
@@ -35,3 +38,5 @@ class Token(BaseModel):
 
     access_token: str
     token_type: str = "bearer"
+    user: UserResponse
+

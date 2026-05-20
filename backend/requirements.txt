@@ -9,3 +9,4 @@ cryptography
 pydantic-settings
 python-multipart
 httpx
+email-validator

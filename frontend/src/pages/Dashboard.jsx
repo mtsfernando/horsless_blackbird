@@ -1,10 +1,14 @@
+import { useApi } from '../hooks/useApi';
+
 function Dashboard() {
-  const placeholderPlayers = [
-    { rank: 1, name: 'Jordan S.', handicap: 4.2, avgScore: 74, trend: '↑' },
-    { rank: 2, name: 'Scottie M.', handicap: 5.1, avgScore: 76, trend: '→' },
-    { rank: 3, name: 'Rory L.', handicap: 6.8, avgScore: 78, trend: '↓' },
-    { rank: 4, name: 'Brooks K.', handicap: 7.3, avgScore: 79, trend: '↑' },
-  ];
+  const { data: leaderboard, loading: leadLoading, error: leadError } = useApi('/leaderboard');
+  const { data: stats, loading: statsLoading } = useApi('/leaderboard/stats');
+
+  const activePlayers = stats?.total_players ?? 0;
+  const avgScore = stats?.overall_avg_score ? stats.overall_avg_score.toFixed(1) : '--';
+  const totalRounds = stats?.total_rounds ?? 0;
+  // Calculate average handicap across all players with scores
+  const avgHandicap = stats?.overall_avg_score ? ((stats.overall_avg_score - 72) * 0.96).toFixed(1) : '--';
 
   return (
     <div className="page">
@@ -19,108 +23,130 @@ function Dashboard() {
       {/* Stats Overview */}
       <div className="grid-4 stagger-children" style={{ marginBottom: 'var(--space-xl)' }}>
         <div className="glass-card stat-card">
-          <div className="stat-value stat-value-emerald">12</div>
+          <div className="stat-value stat-value-emerald">
+            {statsLoading ? '...' : activePlayers}
+          </div>
           <div className="stat-label">Active Players</div>
         </div>
         <div className="glass-card stat-card">
-          <div className="stat-value stat-value-gold">74.2</div>
+          <div className="stat-value stat-value-gold">
+            {statsLoading ? '...' : avgScore}
+          </div>
           <div className="stat-label">Avg Score</div>
         </div>
         <div className="glass-card stat-card">
-          <div className="stat-value">48</div>
+          <div className="stat-value">
+            {statsLoading ? '...' : totalRounds}
+          </div>
           <div className="stat-label">Rounds Played</div>
         </div>
         <div className="glass-card stat-card">
-          <div className="stat-value stat-value-emerald">5.4</div>
+          <div className="stat-value stat-value-emerald">
+            {statsLoading ? '...' : avgHandicap}
+          </div>
           <div className="stat-label">Avg Handicap</div>
         </div>
       </div>
 
       {/* Leaderboard Table */}
       <div className="glass-card slide-up" style={{ padding: 0, overflow: 'hidden' }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-          <thead>
-            <tr
-              style={{
-                borderBottom: '1px solid var(--glass-border)',
-                textAlign: 'left',
-              }}
-            >
-              <th style={thStyle}>#</th>
-              <th style={thStyle}>Player</th>
-              <th style={thStyle}>Handicap</th>
-              <th style={thStyle}>Avg Score</th>
-              <th style={{ ...thStyle, textAlign: 'center' }}>Trend</th>
-            </tr>
-          </thead>
-          <tbody>
-            {placeholderPlayers.map((player) => (
+        {leadLoading ? (
+          <div style={{ padding: 'var(--space-2xl)', textAlign: 'center', color: 'var(--text-muted)' }}>
+            <span className="spinner" style={{ marginRight: 8 }} /> Loading leaderboard...
+          </div>
+        ) : leadError ? (
+          <div style={{ padding: 'var(--space-2xl)', textAlign: 'center', color: 'var(--accent-red)' }}>
+            Error loading leaderboard: {leadError}
+          </div>
+        ) : !leaderboard || leaderboard.length === 0 ? (
+          <div style={{ padding: 'var(--space-2xl)', textAlign: 'center', color: 'var(--text-muted)' }}>
+            No players registered on the platform yet.
+          </div>
+        ) : (
+          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+            <thead>
               <tr
-                key={player.rank}
                 style={{
-                  borderBottom: '1px solid rgba(16, 185, 129, 0.07)',
-                  transition: 'background var(--transition-fast)',
-                  cursor: 'pointer',
+                  borderBottom: '1px solid var(--glass-border)',
+                  textAlign: 'left',
                 }}
-                onMouseEnter={(e) =>
-                  (e.currentTarget.style.background = 'var(--bg-hover)')
-                }
-                onMouseLeave={(e) =>
-                  (e.currentTarget.style.background = 'transparent')
-                }
               >
-                <td style={tdStyle}>
-                  <span
-                    style={{
-                      fontWeight: 700,
-                      color:
-                        player.rank === 1
-                          ? 'var(--accent-gold)'
-                          : player.rank === 2
-                          ? 'var(--text-secondary)'
-                          : player.rank === 3
-                          ? '#CD7F32'
-                          : 'var(--text-muted)',
-                    }}
-                  >
-                    {player.rank}
-                  </span>
-                </td>
-                <td style={tdStyle}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-sm)' }}>
-                    <div className="avatar" style={{ width: 32, height: 32, fontSize: 'var(--font-xs)' }}>
-                      {player.name
-                        .split(' ')
-                        .map((w) => w[0])
-                        .join('')}
-                    </div>
-                    <span style={{ fontWeight: 600 }}>{player.name}</span>
-                  </div>
-                </td>
-                <td style={tdStyle}>
-                  <span style={{ color: 'var(--accent-emerald)', fontWeight: 600 }}>
-                    {player.handicap}
-                  </span>
-                </td>
-                <td style={tdStyle}>{player.avgScore}</td>
-                <td style={{ ...tdStyle, textAlign: 'center', fontSize: 'var(--font-lg)' }}>
-                  <span
-                    style={{
-                      color:
-                        player.trend === '↑'
-                          ? 'var(--accent-emerald)'
-                          : player.trend === '↓'
-                          ? 'var(--accent-red)'
-                          : 'var(--text-muted)',
-                    }}
-                  >
-                    {player.trend}
-                  </span>
-                </td>
+                <th style={thStyle}>#</th>
+                <th style={thStyle}>Player</th>
+                <th style={thStyle}>Rounds</th>
+                <th style={thStyle}>Handicap</th>
+                <th style={thStyle}>Avg Score</th>
+                <th style={thStyle}>Best Score</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {leaderboard.map((player, index) => {
+                const rank = index + 1;
+                const handicapVal = player.avg_score ? ((player.avg_score - 72) * 0.96).toFixed(1) : '--';
+                const avgScoreVal = player.avg_score ? Math.round(player.avg_score) : '--';
+                const bestScoreVal = player.best_score ?? '--';
+
+                return (
+                  <tr
+                    key={player.player_id}
+                    style={{
+                      borderBottom: '1px solid rgba(16, 185, 129, 0.07)',
+                      transition: 'background var(--transition-fast)',
+                      cursor: 'pointer',
+                    }}
+                    onMouseEnter={(e) =>
+                      (e.currentTarget.style.background = 'var(--bg-hover)')
+                    }
+                    onMouseLeave={(e) =>
+                      (e.currentTarget.style.background = 'transparent')
+                    }
+                  >
+                    <td style={tdStyle}>
+                      <span
+                        style={{
+                          fontWeight: 700,
+                          color:
+                            rank === 1
+                              ? 'var(--accent-gold)'
+                              : rank === 2
+                              ? 'var(--text-secondary)'
+                              : rank === 3
+                              ? '#CD7F32'
+                              : 'var(--text-muted)',
+                        }}
+                      >
+                        {rank}
+                      </span>
+                    </td>
+                    <td style={tdStyle}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-sm)' }}>
+                        <div className="avatar" style={{ width: 32, height: 32, fontSize: 'var(--font-xs)' }}>
+                          {player.display_name
+                            ? player.display_name
+                                .split(' ')
+                                .map((w) => w[0])
+                                .join('')
+                                .toUpperCase()
+                                .slice(0, 2)
+                            : '?'}
+                        </div>
+                        <span style={{ fontWeight: 600 }}>{player.display_name || 'Golfer'}</span>
+                      </div>
+                    </td>
+                    <td style={tdStyle}>{player.rounds_played}</td>
+                    <td style={tdStyle}>
+                      <span style={{ color: 'var(--accent-emerald)', fontWeight: 600 }}>
+                        {handicapVal}
+                      </span>
+                    </td>
+                    <td style={tdStyle}>{avgScoreVal}</td>
+                    <td style={tdStyle}>{bestScoreVal}</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        )}
       </div>
 
       {/* Coming Soon */}

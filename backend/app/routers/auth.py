@@ -22,14 +22,16 @@ async def register(payload: UserCreate, db: AsyncSession = Depends(get_db)) -> U
     """Register a new user account.
 
     Args:
-        payload: The user registration data (email, password).
+        payload: The user registration data (email, password, display_name).
         db: The async database session.
 
     Returns:
         The created user data.
     """
     try:
-        user = await auth_service.register_user(db, payload.email, payload.password)
+        user = await auth_service.register_user(
+            db, payload.email, payload.password, payload.display_name
+        )
     except ValueError as exc:
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
@@ -47,7 +49,7 @@ async def login(payload: UserLogin, db: AsyncSession = Depends(get_db)) -> dict:
         db: The async database session.
 
     Returns:
-        A JWT access token.
+        A JWT access token with the user profile information.
     """
     user = await auth_service.authenticate_user(db, payload.email, payload.password)
     if user is None:
@@ -56,7 +58,7 @@ async def login(payload: UserLogin, db: AsyncSession = Depends(get_db)) -> dict:
             detail="Invalid email or password",
         )
     token = create_access_token(data={"sub": str(user.id)})
-    return {"access_token": token, "token_type": "bearer"}
+    return {"access_token": token, "token_type": "bearer", "user": user}
 
 
 @router.get("/me", response_model=UserResponse)

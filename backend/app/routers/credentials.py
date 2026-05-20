@@ -9,7 +9,7 @@ from app.database import get_db
 from app.models.user import User
 from app.schemas.credential import CredentialCreate, CredentialResponse, CredentialUpdate
 from app.services import credential_service
-from app.utils.dependencies import get_current_user
+from app.utils.dependencies import get_current_admin_user
 
 router = APIRouter(prefix="/credentials", tags=["credentials"])
 
@@ -22,14 +22,14 @@ router = APIRouter(prefix="/credentials", tags=["credentials"])
 async def create_credential(
     payload: CredentialCreate,
     db: AsyncSession = Depends(get_db),
-    _current_user: User = Depends(get_current_user),
+    _current_admin: User = Depends(get_current_admin_user),
 ) -> CredentialResponse:
     """Store a new encrypted credential for a player.
 
     Args:
         payload: The credential data (player_id, provider, username, password).
         db: The async database session.
-        _current_user: The authenticated user (for access control).
+        _current_admin: The authenticated admin user (for access control).
 
     Returns:
         The created credential metadata (no passwords).
@@ -43,13 +43,13 @@ async def create_credential(
 @router.get("", response_model=list[CredentialResponse])
 async def list_credentials(
     db: AsyncSession = Depends(get_db),
-    _current_user: User = Depends(get_current_user),
+    _current_admin: User = Depends(get_current_admin_user),
 ) -> list[CredentialResponse]:
     """List all credentials (metadata only, no passwords).
 
     Args:
         db: The async database session.
-        _current_user: The authenticated user (for access control).
+        _current_admin: The authenticated admin user (for access control).
 
     Returns:
         A list of all credential metadata.
@@ -63,7 +63,7 @@ async def update_credential(
     cred_id: uuid.UUID,
     payload: CredentialUpdate,
     db: AsyncSession = Depends(get_db),
-    _current_user: User = Depends(get_current_user),
+    _current_admin: User = Depends(get_current_admin_user),
 ) -> CredentialResponse:
     """Update an existing credential's username and/or password.
 
@@ -71,7 +71,7 @@ async def update_credential(
         cred_id: The credential's UUID.
         payload: The fields to update.
         db: The async database session.
-        _current_user: The authenticated user (for access control).
+        _current_admin: The authenticated admin user (for access control).
 
     Returns:
         The updated credential metadata (no passwords).
@@ -91,14 +91,14 @@ async def update_credential(
 async def delete_credential(
     cred_id: uuid.UUID,
     db: AsyncSession = Depends(get_db),
-    _current_user: User = Depends(get_current_user),
+    _current_admin: User = Depends(get_current_admin_user),
 ) -> None:
     """Delete a credential by ID.
 
     Args:
         cred_id: The credential's UUID.
         db: The async database session.
-        _current_user: The authenticated user (for access control).
+        _current_admin: The authenticated admin user (for access control).
     """
     deleted = await credential_service.delete_credential(db, cred_id)
     if not deleted:
@@ -111,13 +111,13 @@ async def delete_credential(
 @router.post("/{cred_id}/test", status_code=status.HTTP_501_NOT_IMPLEMENTED)
 async def test_credential(
     cred_id: uuid.UUID,
-    _current_user: User = Depends(get_current_user),
+    _current_admin: User = Depends(get_current_admin_user),
 ) -> dict:
     """Test a credential against the provider — placeholder.
 
     Args:
         cred_id: The credential's UUID.
-        _current_user: The authenticated user (for access control).
+        _current_admin: The authenticated admin user (for access control).
 
     Returns:
         A 501 status with a message.

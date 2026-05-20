@@ -53,3 +53,25 @@ async def get_current_user(
         raise credentials_exception
 
     return user
+
+
+async def get_current_admin_user(
+    current_user: User = Depends(get_current_user),
+) -> User:
+    """Ensure the currently authenticated user is an administrator.
+
+    Args:
+        current_user: The authenticated User (injected via dependency).
+
+    Returns:
+        The authenticated User if they are an admin.
+
+    Raises:
+        HTTPException: 403 Forbidden if the user is not an admin.
+    """
+    if not current_user.is_admin:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Admin access required",
+        )
+    return current_user

@@ -1,7 +1,7 @@
 """Leaderboard endpoints — aggregate stats across players."""
 
 from fastapi import APIRouter, Depends, Query
-from sqlalchemy import func, select
+from sqlalchemy import func, select, nulls_last
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.database import get_db
@@ -38,9 +38,9 @@ async def get_leaderboard(
             func.avg(Round.total_score).label("avg_score"),
             func.min(Round.total_score).label("best_score"),
         )
-        .join(Round, Round.player_id == Player.id)
+        .outerjoin(Round, Round.player_id == Player.id)
         .group_by(Player.id, Player.display_name, Player.avatar_url)
-        .order_by(func.avg(Round.total_score).asc())
+        .order_by(nulls_last(func.avg(Round.total_score).asc()))
         .limit(limit)
     )
 

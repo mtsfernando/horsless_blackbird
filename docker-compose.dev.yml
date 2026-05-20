@@ -1,0 +1,48 @@
+# Docker Compose Dev Overrides
+# Usage: docker compose -f docker-compose.yml -f docker-compose.dev.yml up
+#
+# - Mounts source code for hot-reload
+# - Uses dev Dockerfiles
+# - Skips NGINX (access services directly)
+# - Exposes all ports for debugging
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.dev
+    volumes:
+      - ./backend:/app
+    environment:
+      CORS_ORIGINS: '["http://localhost:5173","http://localhost:3000"]'
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    ports:
+      - "5173:5173"
+    environment:
+      VITE_API_URL: "http://localhost:8000/api"
+    command: npm run dev
+
+  scraper:
+    build:
+      context: ./scraper
+      dockerfile: Dockerfile
+    volumes:
+      - ./scraper:/app
+
+  # Disable NGINX in dev — access frontend/backend directly
+  nginx:
+    profiles:
+      - production
+
+  # Disable Jenkins in dev unless explicitly needed
+  jenkins:
+    profiles:
+      - production

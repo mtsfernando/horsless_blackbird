@@ -1,0 +1,6 @@
+playwright
+asyncpg
+sqlalchemy[asyncio]
+cryptography
+httpx
+python-dotenv

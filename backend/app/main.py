@@ -8,7 +8,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import settings
-from app.routers import auth, profile, players, rounds, leaderboard, credentials, upload, email
+from app.routers import auth, profile, players, rounds, leaderboard, credentials, upload, email, activity
 
 logger = logging.getLogger("horseless_blackbird")
 
@@ -52,6 +52,7 @@ def create_app() -> FastAPI:
     application.include_router(credentials.router, prefix="/api")
     application.include_router(upload.router, prefix="/api")
     application.include_router(email.router, prefix="/api")
+    application.include_router(activity.router, prefix="/api")
 
     @application.get("/api/health", tags=["health"])
     async def health_check() -> dict:

@@ -1,0 +1,1519 @@
+{
+  "myData": {
+    "accountData": {
+      "userId": "15ee44f2-c354-11ee-8274-029b90f35a4e",
+      "userName": "Thilina Fernando",
+      "accountCreatedSource": "email",
+      "registerTimestamp": 1707047640767,
+      "birthYear": 2000,
+      "mobileNumber": "61432241880",
+      "email": "thilina.fernando9@gmail.com"
+    },
+    "activityData": {
+      "roundCount": 21,
+      "rounds": [
+        {
+          "id": "f99ecec0-c874-11ee-9639-02627b678af7",
+          "timestamp": 1707611522156,
+          "clubId": {
+            "id": "742b5010-86ac-11e4-8c28-020000005b00"
+          },
+          "score": 21,
+          "strokes": 55,
+          "holeStrokes": [
+            6,
+            5,
+            6,
+            7,
+            6,
+            7,
+            7,
+            6,
+            5
+          ],
+          "stats": {
+            "aces": 0,
+            "doubleEagleOrBetter": 0,
+            "eagles": 0,
+            "birdies": 0,
+            "pars": 0,
+            "bogeys": 1,
+            "doubleBogeyOrWorse": 8,
+            "fairwayLefts": 0,
+            "fairwayMiddles": 0,
+            "fairwayRights": 0,
+            "fairwayShorts": 0,
+            "fairwayLongs": 0,
+            "fairwayHoleCount": 0,
+            "gir": 0,
+            "girLefts": 0,
+            "girRights": 0,
+            "girShorts": 0,
+            "girLongs": 0,
+            "girNoChances": 0,
+            "girHoleCount": 0,
+            "putts": 0,
+            "puttHoleCount": 0,
+            "strokeGainOverall": 100,
+            "strokeGainTeeToGreen": 100,
+            "recommendedStats": [
+              {
+                "type": "TOTAL_BIRDIES",
+                "noStats": false,
+                "value": 0
+              },
+              {
+                "type": "TOTAL_PARS",
+                "noStats": false,
+                "value": 0
+              },
+              {
+                "type": "TOTAL_BOGEYS",
+                "noStats": false,
+                "value": 1
+              }
+            ]
+          }
+        },
+        {
+          "id": "095eb790-d8fa-11ee-ab5f-02627b678af7",
+          "timestamp": 1709427889006,
+          "clubId": {
+            "id": "742b5010-86ac-11e4-8c28-020000005b00"
+          },
+          "score": 28,
+          "strokes": 62,
+          "holeStrokes": [
+            6,
+            7,
+            7,
+            7,
+            6,
+            8,
+            7,
+            7,
+            7
+          ],
+          "stats": {
+            "aces": 0,
+            "doubleEagleOrBetter": 0,
+            "eagles": 0,
+            "birdies": 0,
+            "pars": 0,
+            "bogeys": 0,
+            "doubleBogeyOrWorse": 9,
+            "fairwayLefts": 0,
+            "fairwayMiddles": 0,
+            "fairwayRights": 0,
+            "fairwayShorts": 0,
+            "fairwayLongs": 0,
+            "fairwayHoleCount": 0,
+            "gir": 0,
+            "girLefts": 0,
+            "girRights": 0,
+            "girShorts": 0,
+            "girLongs": 0,
+            "girNoChances": 0,
+            "girHoleCount": 9,
+            "putts": 5,
+            "puttHoleCount": 0,
+            "strokeGainOverall": 100,
+            "strokeGainTeeToGreen": 100,
+            "recommendedStats": [
+              {
+                "type": "TOTAL_BIRDIES",
+                "noStats": false,
+                "value": 0
+              },
+              {
+                "type": "TOTAL_PARS",
+                "noStats": false,
+                "value": 0
+              },
+              {
+                "type": "TOTAL_BOGEYS",
+                "noStats": false,
+                "value": 0
+              }
+            ]
+          }
+        },
+        {
+          "id": "377b1880-e3f9-11ee-8358-0a202d83cc26",
+          "timestamp": 1710637000770,
+          "clubId": {
+            "id": "742b5010-86ac-11e4-8c28-020000005b00"
+          },
+          "score": 28,
+          "strokes": 62,
+          "holeStrokes": [
+            7,
+            8,
+            7,
+            8,
+            6,
+            4,
+            7,
+            7,
+            8
+          ],
+          "stats": {
+            "aces": 0,
+            "doubleEagleOrBetter": 0,
+            "eagles": 0,
+            "birdies": 0,
+            "pars": 1,
+            "bogeys": 0,
+            "doubleBogeyOrWorse": 8,
+            "fairwayLefts": 0,
+            "fairwayMiddles": 4,
+            "fairwayRights": 0,
+            "fairwayShorts": 0,
+            "fairwayLongs": 0,
+            "fairwayHoleCount": 7,
+            "gir": 0,
+            "girLefts": 0,
+            "girRights": 0,
+            "girShorts": 0,
+            "girLongs": 0,
+            "girNoChances": 0,
+            "girHoleCount": 0,
+            "putts": 3,
+            "puttHoleCount": 0,
+            "strokeGainOverall": 100,
+            "strokeGainTeeToGreen": 100,
+            "recommendedStats": [
+              {
+                "type": "TOTAL_BIRDIES",
+                "noStats": false,
+                "value": 0
+              },
+              {
+                "type": "TOTAL_PARS",
+                "noStats": false,
+                "value": 1
+              },
+              {
+                "type": "TOTAL_BOGEYS",
+                "noStats": false,
+                "value": 0
+              }
+            ]
+          }
+        },
+        {
+          "id": "6a6f6800-f7a3-11ee-a5d7-029b90f35a4e",
+          "timestamp": 1712799172873,
+          "clubId": {
+            "id": "742b5010-86ac-11e4-8c28-020000005b00"
+          },
+          "score": 28,
+          "strokes": 62,
+          "holeStrokes": [
+            6,
+            8,
+            7,
+            8,
+            4,
+            8,
+            9,
+            5,
+            7
+          ],
+          "stats": {
+            "aces": 0,
+            "doubleEagleOrBetter": 0,
+            "eagles": 0,
+            "birdies": 0,
+            "pars": 0,
+            "bogeys": 2,
+            "doubleBogeyOrWorse": 7,
+            "fairwayLefts": 0,
+            "fairwayMiddles": 0,
+            "fairwayRights": 0,
+            "fairwayShorts": 0,
+            "fairwayLongs": 0,
+            "fairwayHoleCount": 0,
+            "gir": 0,
+            "girLefts": 0,
+            "girRights": 0,
+            "girShorts": 0,
+            "girLongs": 0,
+            "girNoChances": 0,
+            "girHoleCount": 0,
+            "putts": 8,
+            "puttHoleCount": 0,
+            "strokeGainOverall": 100,
+            "strokeGainTeeToGreen": 100,
+            "recommendedStats": [
+              {
+                "type": "TOTAL_BIRDIES",
+                "noStats": false,
+                "value": 0
+              },
+              {
+                "type": "TOTAL_PARS",
+                "noStats": false,
+                "value": 0
+              },
+              {
+                "type": "TOTAL_BOGEYS",
+                "noStats": false,
+                "value": 2
+              }
+            ]
+          }
+        },
+        {
+          "id": "a878ac20-2083-11ef-8ec1-02627b678af7",
+          "timestamp": 1717293530817,
+          "clubId": {
+            "id": "742b5010-86ac-11e4-8c28-020000005b00"
+          },
+          "score": 20,
+          "strokes": 54,
+          "holeStrokes": [
+            8,
+            7,
+            4,
+            6,
+            3,
+            5,
+            6,
+            6,
+            9
+          ],
+          "stats": {
+            "aces": 0,
+            "doubleEagleOrBetter": 0,
+            "eagles": 0,
+            "birdies": 0,
+            "pars": 2,
+            "bogeys": 1,
+            "doubleBogeyOrWorse": 6,
+            "fairwayLefts": 0,
+            "fairwayMiddles": 2,
+            "fairwayRights": 0,
+            "fairwayShorts": 0,
+            "fairwayLongs": 0,
+            "fairwayHoleCount": 7,
+            "gir": 1,
+            "girLefts": 0,
+            "girRights": 0,
+            "girShorts": 0,
+            "girLongs": 0,
+            "girNoChances": 0,
+            "girHoleCount": 9,
+            "putts": 5,
+            "puttHoleCount": 0,
+            "strokeGainOverall": 100,
+            "strokeGainTeeToGreen": 100,
+            "recommendedStats": [
+              {
+                "type": "FAIRWAY_HIT_PERCENTAGE",
+                "noStats": false,
+                "value": 0.2857143
+              },
+              {
+                "type": "GIR_PERCENTAGE",
+                "noStats": false,
+                "value": 0.11111111
+              },
+              {
+                "type": "TOTAL_PUTTS",
+                "noStats": false,
+                "value": 5
+              }
+            ]
+          }
+        },
+        {
+          "id": "5d8ca640-0d0d-11f0-81cb-021d58ec5439",
+          "timestamp": 1743301148052,
+          "clubId": {
+            "id": "742b5010-86ac-11e4-8c28-020000005b00"
+          },
+          "score": 20,
+          "strokes": 54,
+          "holeStrokes": [
+            7,
+            6,
+            7,
+            6,
+            5,
+            6,
+            6,
+            6,
+            5
+          ],
+          "stats": {
+            "aces": 0,
+            "doubleEagleOrBetter": 0,
+            "eagles": 0,
+            "birdies": 0,
+            "pars": 0,
+            "bogeys": 1,
+            "doubleBogeyOrWorse": 8,
+            "fairwayLefts": 0,
+            "fairwayMiddles": 0,
+            "fairwayRights": 0,
+            "fairwayShorts": 0,
+            "fairwayLongs": 0,
+            "fairwayHoleCount": 0,
+            "gir": 0,
+            "girLefts": 0,
+            "girRights": 0,
+            "girShorts": 0,
+            "girLongs": 0,
+            "girNoChances": 0,
+            "girHoleCount": 0,
+            "putts": 0,
+            "puttHoleCount": 0,
+            "strokeGainOverall": 100,
+            "strokeGainTeeToGreen": 100,
+            "recommendedStats": [
+              {
+                "type": "TOTAL_BIRDIES",
+                "noStats": false,
+                "value": 0
+              },
+              {
+                "type": "TOTAL_PARS",
+                "noStats": false,
+                "value": 0
+              },
+              {
+                "type": "TOTAL_BOGEYS",
+                "noStats": false,
+                "value": 1
+              }
+            ]
+          }
+        },
+        {
+          "id": "ec012ab0-288b-11f0-99d0-06dc4cbfdf1e",
+          "timestamp": 1746324186966,
+          "clubId": {
+            "id": "742b5010-86ac-11e4-8c28-020000005b00"
+          },
+          "score": 21,
+          "strokes": 55,
+          "holeStrokes": [
+            5,
+            7,
+            5,
+            5,
+            6,
+            6,
+            8,
+            5,
+            8
+          ],
+          "stats": {
+            "aces": 0,
+            "doubleEagleOrBetter": 0,
+            "eagles": 0,
+            "birdies": 0,
+            "pars": 0,
+            "bogeys": 4,
+            "doubleBogeyOrWorse": 5,
+            "fairwayLefts": 0,
+            "fairwayMiddles": 0,
+            "fairwayRights": 0,
+            "fairwayShorts": 0,
+            "fairwayLongs": 0,
+            "fairwayHoleCount": 0,
+            "gir": 0,
+            "girLefts": 0,
+            "girRights": 0,
+            "girShorts": 0,
+            "girLongs": 0,
+            "girNoChances": 0,
+            "girHoleCount": 0,
+            "putts": 0,
+            "puttHoleCount": 0,
+            "strokeGainOverall": 100,
+            "strokeGainTeeToGreen": 100,
+            "recommendedStats": [
+              {
+                "type": "TOTAL_BIRDIES",
+                "noStats": false,
+                "value": 0
+              },
+              {
+                "type": "TOTAL_PARS",
+                "noStats": false,
+                "value": 0
+              },
+              {
+                "type": "TOTAL_BOGEYS",
+                "noStats": false,
+                "value": 4
+              }
+            ]
+          }
+        },
+        {
+          "id": "6d58b8b0-b790-11f0-a2d2-06508d097ff9",
+          "timestamp": 1762049138350,
+          "clubId": {
+            "id": "742b5010-86ac-11e4-8c28-020000005b00"
+          },
+          "score": 22,
+          "strokes": 56,
+          "holeStrokes": [
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            7,
+            7
+          ],
+          "stats": {
+            "aces": 0,
+            "doubleEagleOrBetter": 0,
+            "eagles": 0,
+            "birdies": 0,
+            "pars": 0,
+            "bogeys": 0,
+            "doubleBogeyOrWorse": 9,
+            "fairwayLefts": 0,
+            "fairwayMiddles": 0,
+            "fairwayRights": 0,
+            "fairwayShorts": 0,
+            "fairwayLongs": 0,
+            "fairwayHoleCount": 0,
+            "gir": 0,
+            "girLefts": 0,
+            "girRights": 0,
+            "girShorts": 0,
+            "girLongs": 0,
+            "girNoChances": 0,
+            "girHoleCount": 0,
+            "putts": 0,
+            "puttHoleCount": 0,
+            "strokeGainOverall": 100,
+            "strokeGainTeeToGreen": 100,
+            "recommendedStats": [
+              {
+                "type": "TOTAL_BIRDIES",
+                "noStats": false,
+                "value": 0
+              },
+              {
+                "type": "TOTAL_PARS",
+                "noStats": false,
+                "value": 0
+              },
+              {
+                "type": "TOTAL_BOGEYS",
+                "noStats": false,
+                "value": 0
+              }
+            ]
+          }
+        },
+        {
+          "id": "f2b140e0-1a73-11f1-aa56-06dc4cbfdf1e",
+          "timestamp": 1772922071658,
+          "clubId": {
+            "id": "742b5010-86ac-11e4-8c28-020000005b00"
+          },
+          "score": 22,
+          "strokes": 56,
+          "holeStrokes": [
+            6,
+            6,
+            8,
+            6,
+            6,
+            6,
+            6,
+            5,
+            7
+          ],
+          "stats": {
+            "aces": 0,
+            "doubleEagleOrBetter": 0,
+            "eagles": 0,
+            "birdies": 0,
+            "pars": 0,
+            "bogeys": 1,
+            "doubleBogeyOrWorse": 8,
+            "fairwayLefts": 0,
+            "fairwayMiddles": 0,
+            "fairwayRights": 0,
+            "fairwayShorts": 0,
+            "fairwayLongs": 0,
+            "fairwayHoleCount": 0,
+            "gir": 0,
+            "girLefts": 0,
+            "girRights": 0,
+            "girShorts": 0,
+            "girLongs": 0,
+            "girNoChances": 0,
+            "girHoleCount": 0,
+            "putts": 0,
+            "puttHoleCount": 0,
+            "strokeGainOverall": 100,
+            "strokeGainTeeToGreen": 100,
+            "recommendedStats": [
+              {
+                "type": "TOTAL_BIRDIES",
+                "noStats": false,
+                "value": 0
+              },
+              {
+                "type": "TOTAL_PARS",
+                "noStats": false,
+                "value": 0
+              },
+              {
+                "type": "TOTAL_BOGEYS",
+                "noStats": false,
+                "value": 1
+              }
+            ]
+          }
+        },
+        {
+          "id": "e44a13d0-1ff3-11f1-8010-068d11321665",
+          "timestamp": 1773526777661,
+          "clubId": {
+            "id": "742b5010-86ac-11e4-8c28-020000005b00"
+          },
+          "score": 24,
+          "strokes": 58,
+          "holeStrokes": [
+            8,
+            7,
+            6,
+            7,
+            5,
+            6,
+            7,
+            7,
+            5
+          ],
+          "stats": {
+            "aces": 0,
+            "doubleEagleOrBetter": 0,
+            "eagles": 0,
+            "birdies": 0,
+            "pars": 0,
+            "bogeys": 1,
+            "doubleBogeyOrWorse": 8,
+            "fairwayLefts": 0,
+            "fairwayMiddles": 0,
+            "fairwayRights": 0,
+            "fairwayShorts": 0,
+            "fairwayLongs": 0,
+            "fairwayHoleCount": 0,
+            "gir": 0,
+            "girLefts": 0,
+            "girRights": 0,
+            "girShorts": 0,
+            "girLongs": 0,
+            "girNoChances": 0,
+            "girHoleCount": 0,
+            "putts": 0,
+            "puttHoleCount": 0,
+            "strokeGainOverall": 100,
+            "strokeGainTeeToGreen": 100,
+            "recommendedStats": [
+              {
+                "type": "TOTAL_BIRDIES",
+                "noStats": false,
+                "value": 0
+              },
+              {
+                "type": "TOTAL_PARS",
+                "noStats": false,
+                "value": 0
+              },
+              {
+                "type": "TOTAL_BOGEYS",
+                "noStats": false,
+                "value": 1
+              }
+            ]
+          }
+        },
+        {
+          "id": "895f9810-2579-11f1-86b8-0a456b4aa951",
+          "timestamp": 1774133933381,
+          "clubId": {
+            "id": "742b5010-86ac-11e4-8c28-020000005b00"
+          },
+          "score": 22,
+          "strokes": 56,
+          "holeStrokes": [
+            8,
+            6,
+            6,
+            6,
+            5,
+            4,
+            7,
+            7,
+            7
+          ],
+          "stats": {
+            "aces": 0,
+            "doubleEagleOrBetter": 0,
+            "eagles": 0,
+            "birdies": 0,
+            "pars": 1,
+            "bogeys": 0,
+            "doubleBogeyOrWorse": 8,
+            "fairwayLefts": 0,
+            "fairwayMiddles": 0,
+            "fairwayRights": 0,
+            "fairwayShorts": 0,
+            "fairwayLongs": 0,
+            "fairwayHoleCount": 0,
+            "gir": 0,
+            "girLefts": 0,
+            "girRights": 0,
+            "girShorts": 0,
+            "girLongs": 0,
+            "girNoChances": 0,
+            "girHoleCount": 0,
+            "putts": 0,
+            "puttHoleCount": 0,
+            "strokeGainOverall": 100,
+            "strokeGainTeeToGreen": 100,
+            "recommendedStats": [
+              {
+                "type": "TOTAL_BIRDIES",
+                "noStats": false,
+                "value": 0
+              },
+              {
+                "type": "TOTAL_PARS",
+                "noStats": false,
+                "value": 1
+              },
+              {
+                "type": "TOTAL_BOGEYS",
+                "noStats": false,
+                "value": 0
+              }
+            ]
+          }
+        },
+        {
+          "id": "9ab534f0-3080-11f1-b2fd-0a676d1aa88b",
+          "timestamp": 1775346432803,
+          "clubId": {
+            "id": "742b5010-86ac-11e4-8c28-020000005b00"
+          },
+          "score": 22,
+          "strokes": 56,
+          "holeStrokes": [
+            7,
+            5,
+            7,
+            7,
+            5,
+            7,
+            5,
+            7,
+            6
+          ],
+          "stats": {
+            "aces": 0,
+            "doubleEagleOrBetter": 0,
+            "eagles": 0,
+            "birdies": 0,
+            "pars": 0,
+            "bogeys": 1,
+            "doubleBogeyOrWorse": 8,
+            "fairwayLefts": 0,
+            "fairwayMiddles": 0,
+            "fairwayRights": 0,
+            "fairwayShorts": 0,
+            "fairwayLongs": 0,
+            "fairwayHoleCount": 0,
+            "gir": 0,
+            "girLefts": 0,
+            "girRights": 0,
+            "girShorts": 0,
+            "girLongs": 0,
+            "girNoChances": 0,
+            "girHoleCount": 0,
+            "putts": 0,
+            "puttHoleCount": 0,
+            "strokeGainOverall": 100,
+            "strokeGainTeeToGreen": 100,
+            "recommendedStats": [
+              {
+                "type": "TOTAL_BIRDIES",
+                "noStats": false,
+                "value": 0
+              },
+              {
+                "type": "TOTAL_PARS",
+                "noStats": false,
+                "value": 0
+              },
+              {
+                "type": "TOTAL_BOGEYS",
+                "noStats": false,
+                "value": 1
+              }
+            ]
+          }
+        },
+        {
+          "id": "72d86510-3ab2-11f1-9674-068d11321665",
+          "timestamp": 1776467351544,
+          "clubId": {
+            "id": "742b5010-86ac-11e4-8c28-020000005b00"
+          },
+          "score": 22,
+          "strokes": 56,
+          "holeStrokes": [
+            6,
+            7,
+            6,
+            7,
+            5,
+            6,
+            7,
+            6,
+            6
+          ],
+          "stats": {
+            "aces": 0,
+            "doubleEagleOrBetter": 0,
+            "eagles": 0,
+            "birdies": 0,
+            "pars": 0,
+            "bogeys": 0,
+            "doubleBogeyOrWorse": 9,
+            "fairwayLefts": 0,
+            "fairwayMiddles": 0,
+            "fairwayRights": 0,
+            "fairwayShorts": 0,
+            "fairwayLongs": 0,
+            "fairwayHoleCount": 0,
+            "gir": 0,
+            "girLefts": 0,
+            "girRights": 0,
+            "girShorts": 0,
+            "girLongs": 0,
+            "girNoChances": 0,
+            "girHoleCount": 0,
+            "putts": 0,
+            "puttHoleCount": 0,
+            "strokeGainOverall": 100,
+            "strokeGainTeeToGreen": 100,
+            "recommendedStats": [
+              {
+                "type": "TOTAL_BIRDIES",
+                "noStats": false,
+                "value": 0
+              },
+              {
+                "type": "TOTAL_PARS",
+                "noStats": false,
+                "value": 0
+              },
+              {
+                "type": "TOTAL_BOGEYS",
+                "noStats": false,
+                "value": 0
+              }
+            ]
+          }
+        },
+        {
+          "id": "2238dc50-4027-11f1-95ab-0a676d1aa88b",
+          "timestamp": 1777067224723,
+          "clubId": {
+            "id": "73b6bc50-86ac-11e4-8c28-020000005b00"
+          },
+          "score": 23,
+          "strokes": 57,
+          "holeStrokes": [
+            6,
+            5,
+            8,
+            4,
+            6,
+            8,
+            6,
+            6,
+            8
+          ],
+          "stats": {
+            "aces": 0,
+            "doubleEagleOrBetter": 0,
+            "eagles": 0,
+            "birdies": 0,
+            "pars": 0,
+            "bogeys": 2,
+            "doubleBogeyOrWorse": 7,
+            "fairwayLefts": 0,
+            "fairwayMiddles": 1,
+            "fairwayRights": 0,
+            "fairwayShorts": 0,
+            "fairwayLongs": 0,
+            "fairwayHoleCount": 7,
+            "gir": 1,
+            "girLefts": 0,
+            "girRights": 0,
+            "girShorts": 0,
+            "girLongs": 0,
+            "girNoChances": 0,
+            "girHoleCount": 9,
+            "putts": 2,
+            "puttHoleCount": 0,
+            "strokeGainOverall": 100,
+            "strokeGainTeeToGreen": 100,
+            "recommendedStats": [
+              {
+                "type": "FAIRWAY_HIT_PERCENTAGE",
+                "noStats": false,
+                "value": 0.14285715
+              },
+              {
+                "type": "GIR_PERCENTAGE",
+                "noStats": false,
+                "value": 0.11111111
+              },
+              {
+                "type": "TOTAL_PUTTS",
+                "noStats": false,
+                "value": 2
+              }
+            ]
+          }
+        },
+        {
+          "id": "5d13f000-40fc-11f1-a25f-0606d22ea88b",
+          "timestamp": 1777158805964,
+          "clubId": {
+            "id": "742b5010-86ac-11e4-8c28-020000005b00"
+          },
+          "score": 8,
+          "strokes": 42,
+          "holeStrokes": [
+            5,
+            5,
+            5,
+            7,
+            3,
+            3,
+            4,
+            6,
+            4
+          ],
+          "stats": {
+            "aces": 0,
+            "doubleEagleOrBetter": 0,
+            "eagles": 0,
+            "birdies": 1,
+            "pars": 3,
+            "bogeys": 2,
+            "doubleBogeyOrWorse": 3,
+            "fairwayLefts": 0,
+            "fairwayMiddles": 3,
+            "fairwayRights": 0,
+            "fairwayShorts": 0,
+            "fairwayLongs": 0,
+            "fairwayHoleCount": 7,
+            "gir": 3,
+            "girLefts": 0,
+            "girRights": 0,
+            "girShorts": 0,
+            "girLongs": 0,
+            "girNoChances": 0,
+            "girHoleCount": 9,
+            "putts": 8,
+            "puttHoleCount": 0,
+            "strokeGainOverall": 100,
+            "strokeGainTeeToGreen": 100,
+            "recommendedStats": [
+              {
+                "type": "FAIRWAY_HIT_PERCENTAGE",
+                "noStats": false,
+                "value": 0.42857143
+              },
+              {
+                "type": "GIR_PERCENTAGE",
+                "noStats": false,
+                "value": 0.33333334
+              },
+              {
+                "type": "TOTAL_PUTTS",
+                "noStats": false,
+                "value": 8
+              }
+            ]
+          }
+        },
+        {
+          "id": "5d680fd0-45a4-11f1-8361-0606d22ea88b",
+          "timestamp": 1777670766492,
+          "clubId": {
+            "id": "73b6bc50-86ac-11e4-8c28-020000005b00"
+          },
+          "score": 16,
+          "strokes": 50,
+          "holeStrokes": [
+            4,
+            5,
+            5,
+            6,
+            7,
+            5,
+            5,
+            6,
+            7
+          ],
+          "stats": {
+            "aces": 0,
+            "doubleEagleOrBetter": 0,
+            "eagles": 0,
+            "birdies": 0,
+            "pars": 0,
+            "bogeys": 5,
+            "doubleBogeyOrWorse": 4,
+            "fairwayLefts": 0,
+            "fairwayMiddles": 1,
+            "fairwayRights": 0,
+            "fairwayShorts": 0,
+            "fairwayLongs": 0,
+            "fairwayHoleCount": 7,
+            "gir": 0,
+            "girLefts": 0,
+            "girRights": 0,
+            "girShorts": 0,
+            "girLongs": 0,
+            "girNoChances": 0,
+            "girHoleCount": 0,
+            "putts": 5,
+            "puttHoleCount": 0,
+            "strokeGainOverall": 100,
+            "strokeGainTeeToGreen": 100,
+            "recommendedStats": [
+              {
+                "type": "TOTAL_BIRDIES",
+                "noStats": false,
+                "value": 0
+              },
+              {
+                "type": "TOTAL_PARS",
+                "noStats": false,
+                "value": 0
+              },
+              {
+                "type": "TOTAL_BOGEYS",
+                "noStats": false,
+                "value": 5
+              }
+            ]
+          }
+        },
+        {
+          "id": "67582bd0-4b29-11f1-9e3d-0a13f7eef7bd",
+          "timestamp": 1778277662036,
+          "clubId": {
+            "id": "742b5010-86ac-11e4-8c28-020000005b00"
+          },
+          "score": 15,
+          "strokes": 49,
+          "holeStrokes": [
+            6,
+            6,
+            5,
+            7,
+            4,
+            6,
+            5,
+            5,
+            5
+          ],
+          "stats": {
+            "aces": 0,
+            "doubleEagleOrBetter": 0,
+            "eagles": 0,
+            "birdies": 0,
+            "pars": 0,
+            "bogeys": 5,
+            "doubleBogeyOrWorse": 4,
+            "fairwayLefts": 0,
+            "fairwayMiddles": 1,
+            "fairwayRights": 0,
+            "fairwayShorts": 0,
+            "fairwayLongs": 0,
+            "fairwayHoleCount": 7,
+            "gir": 0,
+            "girLefts": 0,
+            "girRights": 0,
+            "girShorts": 0,
+            "girLongs": 0,
+            "girNoChances": 0,
+            "girHoleCount": 0,
+            "putts": 0,
+            "puttHoleCount": 0,
+            "strokeGainOverall": 100,
+            "strokeGainTeeToGreen": 100,
+            "recommendedStats": [
+              {
+                "type": "TOTAL_BIRDIES",
+                "noStats": false,
+                "value": 0
+              },
+              {
+                "type": "TOTAL_PARS",
+                "noStats": false,
+                "value": 0
+              },
+              {
+                "type": "TOTAL_BOGEYS",
+                "noStats": false,
+                "value": 5
+              }
+            ]
+          }
+        },
+        {
+          "id": "4345f3b0-4bf3-11f1-bc10-026cea355d3f",
+          "timestamp": 1778364359805,
+          "clubId": {
+            "id": "73b6bc50-86ac-11e4-8c28-020000005b00"
+          },
+          "score": 26,
+          "strokes": 61,
+          "holeStrokes": [
+            6,
+            8,
+            9,
+            7,
+            8,
+            5,
+            6,
+            6,
+            6
+          ],
+          "stats": {
+            "aces": 0,
+            "doubleEagleOrBetter": 0,
+            "eagles": 0,
+            "birdies": 0,
+            "pars": 0,
+            "bogeys": 0,
+            "doubleBogeyOrWorse": 9,
+            "fairwayLefts": 0,
+            "fairwayMiddles": 0,
+            "fairwayRights": 0,
+            "fairwayShorts": 0,
+            "fairwayLongs": 0,
+            "fairwayHoleCount": 0,
+            "gir": 0,
+            "girLefts": 0,
+            "girRights": 0,
+            "girShorts": 0,
+            "girLongs": 0,
+            "girNoChances": 0,
+            "girHoleCount": 0,
+            "putts": 7,
+            "puttHoleCount": 0,
+            "strokeGainOverall": 100,
+            "strokeGainTeeToGreen": 100,
+            "recommendedStats": [
+              {
+                "type": "TOTAL_BIRDIES",
+                "noStats": false,
+                "value": 0
+              },
+              {
+                "type": "TOTAL_PARS",
+                "noStats": false,
+                "value": 0
+              },
+              {
+                "type": "TOTAL_BOGEYS",
+                "noStats": false,
+                "value": 0
+              }
+            ]
+          }
+        },
+        {
+          "id": "ba1d5ec0-50ac-11f1-b8e8-0606d22ea88b",
+          "timestamp": 1778883820627,
+          "clubId": {
+            "id": "73b6bc50-86ac-11e4-8c28-020000005b00"
+          },
+          "score": 15,
+          "strokes": 49,
+          "holeStrokes": [
+            5,
+            6,
+            6,
+            5,
+            4,
+            6,
+            6,
+            5,
+            6
+          ],
+          "stats": {
+            "aces": 0,
+            "doubleEagleOrBetter": 0,
+            "eagles": 0,
+            "birdies": 0,
+            "pars": 1,
+            "bogeys": 1,
+            "doubleBogeyOrWorse": 7,
+            "fairwayLefts": 1,
+            "fairwayMiddles": 0,
+            "fairwayRights": 1,
+            "fairwayShorts": 0,
+            "fairwayLongs": 0,
+            "fairwayHoleCount": 7,
+            "gir": 1,
+            "girLefts": 0,
+            "girRights": 0,
+            "girShorts": 0,
+            "girLongs": 0,
+            "girNoChances": 0,
+            "girHoleCount": 9,
+            "putts": 3,
+            "puttHoleCount": 0,
+            "strokeGainOverall": 100,
+            "strokeGainTeeToGreen": 100,
+            "recommendedStats": [
+              {
+                "type": "FAIRWAY_HIT_PERCENTAGE",
+                "noStats": false,
+                "value": 0
+              },
+              {
+                "type": "GIR_PERCENTAGE",
+                "noStats": false,
+                "value": 0.11111111
+              },
+              {
+                "type": "TOTAL_PUTTS",
+                "noStats": false,
+                "value": 3
+              }
+            ]
+          }
+        },
+        {
+          "id": "98032850-50c1-11f1-8bbf-0a13f7eef7bd",
+          "timestamp": 1778892783388,
+          "clubId": {
+            "id": "73b6bc50-86ac-11e4-8c28-020000005b00"
+          },
+          "score": 16,
+          "strokes": 51,
+          "holeStrokes": [
+            5,
+            6,
+            7,
+            6,
+            6,
+            5,
+            6,
+            5,
+            5
+          ],
+          "stats": {
+            "aces": 0,
+            "doubleEagleOrBetter": 0,
+            "eagles": 0,
+            "birdies": 0,
+            "pars": 0,
+            "bogeys": 2,
+            "doubleBogeyOrWorse": 7,
+            "fairwayLefts": 1,
+            "fairwayMiddles": 3,
+            "fairwayRights": 0,
+            "fairwayShorts": 0,
+            "fairwayLongs": 0,
+            "fairwayHoleCount": 7,
+            "gir": 1,
+            "girLefts": 0,
+            "girRights": 0,
+            "girShorts": 0,
+            "girLongs": 0,
+            "girNoChances": 0,
+            "girHoleCount": 9,
+            "putts": 5,
+            "puttHoleCount": 0,
+            "strokeGainOverall": 100,
+            "strokeGainTeeToGreen": 100,
+            "recommendedStats": [
+              {
+                "type": "FAIRWAY_HIT_PERCENTAGE",
+                "noStats": false,
+                "value": 0.42857143
+              },
+              {
+                "type": "GIR_PERCENTAGE",
+                "noStats": false,
+                "value": 0.11111111
+              },
+              {
+                "type": "TOTAL_PUTTS",
+                "noStats": false,
+                "value": 5
+              }
+            ]
+          }
+        },
+        {
+          "id": "1fe17b00-518f-11f1-8c48-06aa16f34bd3",
+          "timestamp": 1778981057825,
+          "clubId": {
+            "id": "73b6bc50-86ac-11e4-8c28-020000005b00"
+          },
+          "score": 20,
+          "strokes": 55,
+          "holeStrokes": [
+            6,
+            6,
+            8,
+            6,
+            5,
+            5,
+            7,
+            6,
+            6
+          ],
+          "stats": {
+            "aces": 0,
+            "doubleEagleOrBetter": 0,
+            "eagles": 0,
+            "birdies": 0,
+            "pars": 0,
+            "bogeys": 1,
+            "doubleBogeyOrWorse": 8,
+            "fairwayLefts": 0,
+            "fairwayMiddles": 1,
+            "fairwayRights": 0,
+            "fairwayShorts": 0,
+            "fairwayLongs": 0,
+            "fairwayHoleCount": 7,
+            "gir": 1,
+            "girLefts": 0,
+            "girRights": 0,
+            "girShorts": 0,
+            "girLongs": 0,
+            "girNoChances": 0,
+            "girHoleCount": 9,
+            "putts": 3,
+            "puttHoleCount": 0,
+            "strokeGainOverall": 100,
+            "strokeGainTeeToGreen": 100,
+            "recommendedStats": [
+              {
+                "type": "FAIRWAY_HIT_PERCENTAGE",
+                "noStats": false,
+                "value": 0.14285715
+              },
+              {
+                "type": "GIR_PERCENTAGE",
+                "noStats": false,
+                "value": 0.11111111
+              },
+              {
+                "type": "TOTAL_PUTTS",
+                "noStats": false,
+                "value": 3
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "clubData": {
+      "playedClubs": [
+        {
+          "clubId": "742b5010-86ac-11e4-8c28-020000005b00",
+          "name": "Skye Golf"
+        },
+        {
+          "clubId": "73b6bc50-86ac-11e4-8c28-020000005b00",
+          "name": "Rowville Lakes Golf Course"
+        }
+      ],
+      "postedInClubs": [
+        {
+          "clubId": "742b5010-86ac-11e4-8c28-020000005b00",
+          "name": "Skye Golf"
+        },
+        {
+          "clubId": "73b6bc50-86ac-11e4-8c28-020000005b00",
+          "name": "Rowville Lakes Golf Course"
+        }
+      ]
+    },
+    "feedData": {
+      "messageCount": 34,
+      "messages": [
+        {
+          "messageId": "6988c550-c35d-11ee-a91b-06dc4cbfdf1e"
+        },
+        {
+          "messageId": "63b368c0-c41a-11ee-8134-0ab15c307481"
+        },
+        {
+          "messageId": "c5f721e0-c85f-11ee-8274-029b90f35a4e",
+          "content": "Thilina Fernando is now connected with Mario Silva"
+        },
+        {
+          "messageId": "f9a0ca90-c874-11ee-9639-02627b678af7"
+        },
+        {
+          "messageId": "59181b00-c88d-11ee-9639-02627b678af7"
+        },
+        {
+          "messageId": "0962d640-d8fa-11ee-ab5f-02627b678af7"
+        },
+        {
+          "messageId": "377f5e40-e3f9-11ee-8358-0a202d83cc26"
+        },
+        {
+          "messageId": "6a73adc0-f7a3-11ee-a5d7-029b90f35a4e"
+        },
+        {
+          "messageId": "a87e2a60-2083-11ef-8ec1-02627b678af7"
+        },
+        {
+          "messageId": "5d904fc0-0d0d-11f0-81cb-021d58ec5439"
+        },
+        {
+          "messageId": "ec054960-288b-11f0-99d0-06dc4cbfdf1e"
+        },
+        {
+          "messageId": "035242d0-289b-11f0-a9be-0a37364634b7"
+        },
+        {
+          "messageId": "9b9f3470-2950-11f0-b707-0ab15c307481"
+        },
+        {
+          "messageId": "48cdadc0-2965-11f0-b9a2-06d15d9e7497",
+          "content": "Thilina Fernando is now connected with Idris Jaleel"
+        },
+        {
+          "messageId": "6d5b02a0-b790-11f0-a2d2-06508d097ff9"
+        },
+        {
+          "messageId": "ccf55f30-1a73-11f1-aa56-06dc4cbfdf1e",
+          "content": "Thilina Fernando is now connected with Revanka Abeywardena"
+        },
+        {
+          "messageId": "f2b42710-1a73-11f1-aa56-06dc4cbfdf1e"
+        },
+        {
+          "messageId": "e4558580-1ff3-11f1-8010-068d11321665"
+        },
+        {
+          "messageId": "7cf22560-2007-11f1-9135-0a456b4aa951",
+          "content": "Thilina Fernando is now connected with Ransika Bellanage"
+        },
+        {
+          "messageId": "3a629c70-2011-11f1-9135-0a456b4aa951",
+          "content": "Thilina Fernando is now connected with Olitha Withanage"
+        },
+        {
+          "messageId": "8962a550-2579-11f1-86b8-0a456b4aa951"
+        },
+        {
+          "messageId": "d8c38b20-25b8-11f1-86b8-0a456b4aa951",
+          "content": "Thilina Fernando is now connected with helitha withanage"
+        },
+        {
+          "messageId": "9e4dec10-3080-11f1-b2fd-0a676d1aa88b"
+        },
+        {
+          "messageId": "412e0cd0-3ab3-11f1-a25f-0606d22ea88b"
+        },
+        {
+          "messageId": "9be9e020-3b0f-11f1-98d1-06aa16f34bd3",
+          "content": "Thilina Fernando is now connected with Aqeel Miskin"
+        },
+        {
+          "messageId": "224c3d40-4027-11f1-95ab-0a676d1aa88b"
+        },
+        {
+          "messageId": "5d1883e0-40fc-11f1-a25f-0606d22ea88b"
+        },
+        {
+          "messageId": "5d6bb950-45a4-11f1-8361-0606d22ea88b"
+        },
+        {
+          "messageId": "675ce6c0-4b29-11f1-9e3d-0a13f7eef7bd"
+        },
+        {
+          "messageId": "7907f950-4b3d-11f1-9e3d-0a13f7eef7bd",
+          "content": "Thilina Fernando is now connected with Rav"
+        },
+        {
+          "messageId": "434e0a00-4bf3-11f1-bc10-026cea355d3f"
+        },
+        {
+          "messageId": "ba217d71-50ac-11f1-b8e8-0606d22ea88b"
+        },
+        {
+          "messageId": "9806f8e0-50c1-11f1-8bbf-0a13f7eef7bd"
+        },
+        {
+          "messageId": "1fe54b90-518f-11f1-8c48-06aa16f34bd3"
+        }
+      ]
+    },
+    "friendData": {
+      "friendCount": 8,
+      "friends": [
+        {
+          "userId": "3023f3d0-b8fb-11f0-a1e7-021d58ec5439",
+          "name": "Revanka Abeywardena"
+        },
+        {
+          "userId": "c9da45e0-4b2e-11f1-bb11-02d9778a0d31",
+          "name": "Rav"
+        },
+        {
+          "userId": "e62d9b70-c80e-11ee-af02-0a202d83cc26",
+          "name": "Mario Silva"
+        },
+        {
+          "userId": "ef8e1ef0-2005-11f1-8d7d-02e3a2bf5c95",
+          "name": "Ransika Bellanage"
+        },
+        {
+          "userId": "35e274e0-9205-11ef-be5a-0ab15c307481",
+          "name": "Idris Jaleel"
+        },
+        {
+          "userId": "506bfbc0-54a0-11f0-b75d-06508d097ff9",
+          "name": "helitha withanage"
+        },
+        {
+          "userId": "735b5b40-3ab3-11f1-960a-02d9778a0d31",
+          "name": "Aqeel Miskin"
+        },
+        {
+          "userId": "f4acb2c0-2005-11f1-9135-0a456b4aa951",
+          "name": "Olitha Withanage"
+        }
+      ]
+    },
+    "subscriptionData": {
+      "status": "none",
+      "expiredTimestamp": 0
+    }
+  }
+}

@@ -38,3 +38,9 @@ class Round(Base):
         "HoleScore", back_populates="round", lazy="selectin", cascade="all, delete-orphan",
         order_by="HoleScore.hole_number"
     )
+
+    @property
+    def holes_count(self) -> int:
+        """Count of played holes in this round."""
+        return len(self.hole_scores)
+

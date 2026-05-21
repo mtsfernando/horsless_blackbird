@@ -21,13 +21,7 @@ function Dashboard() {
       </div>
 
       {/* Stats Overview */}
-      <div className="grid-4 stagger-children" style={{ marginBottom: 'var(--space-xl)' }}>
-        <div className="glass-card stat-card">
-          <div className="stat-value stat-value-emerald">
-            {statsLoading ? '...' : activePlayers}
-          </div>
-          <div className="stat-label">Active Players</div>
-        </div>
+      <div className="grid-3 stagger-children" style={{ marginBottom: 'var(--space-xl)' }}>
         <div className="glass-card stat-card">
           <div className="stat-value stat-value-gold">
             {statsLoading ? '...' : avgScore}

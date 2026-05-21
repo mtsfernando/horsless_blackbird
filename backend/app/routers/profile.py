@@ -3,6 +3,8 @@
 import uuid
 import json
 import asyncio
+import os
+import httpx
 from datetime import date, datetime
 from fastapi import APIRouter, Depends, HTTPException, status, Query
 from fastapi.responses import StreamingResponse
@@ -16,11 +18,13 @@ from app.models.player import Player
 from app.models.user import User
 from app.models.round import Round
 from app.models.hole_score import HoleScore
+from app.models.raw_import import RawImport
 from app.schemas.credential import CredentialStatusResponse, CredentialUpdate
 from app.schemas.player import PlayerResponse, PlayerUpdate
 from app.services import credential_service
 from app.utils.dependencies import get_current_user
 from app.utils.security import decode_access_token
+
 
 router = APIRouter(prefix="/profile", tags=["profile"])
 
@@ -216,6 +220,62 @@ async def test_credentials(
     return {"detail": "Credential testing not yet implemented"}
 
 
+async def get_course_pars(course_name: str) -> list[int] | None:
+    """Fetch hole pars for a course from GolfCourseAPI."""
+    api_key = "LP4R7Y3O4344ZN5A22K6ZWNTUA"
+    headers = {"Authorization": f"Key {api_key}"}
+    # URL encode course name
+    import urllib.parse
+    encoded_name = urllib.parse.quote(course_name)
+    url = f"https://api.golfcourseapi.com/v1/search?search_query={encoded_name}"
+    try:
+        async with httpx.AsyncClient(timeout=10.0) as client:
+            response = await client.get(url, headers=headers)
+            if response.status_code == 200:
+                res_data = response.json()
+                courses = res_data.get("courses", [])
+                if courses:
+                    # Look at the first matched course
+                    tees = courses[0].get("tees", {})
+                    # Try to get first available tee box holes list
+                    tee_list = tees.get("male") or tees.get("female") or []
+                    if tee_list and "holes" in tee_list[0]:
+                        return [h["par"] for h in tee_list[0]["holes"]]
+    except Exception as e:
+        print(f"Error querying GolfCourseAPI: {e}")
+    return None
+
+
+def calculate_fallback_pars(num_holes: int, total_par: int) -> list[int]:
+    """Dynamically distribute total par across played holes in a realistic way."""
+    if num_holes == 0:
+        return []
+    # Default to par 4 for all
+    pars = [4] * num_holes
+    current_sum = sum(pars)
+    
+    # Adjust until we match total_par
+    if current_sum < total_par:
+        # Increase to 5 for some holes (typical par 5 index positions: 4, 1, 7)
+        par_5_candidates = [4, 1, 7] + list(range(num_holes))
+        for idx in par_5_candidates:
+            if idx < num_holes and pars[idx] < 5:
+                pars[idx] += 1
+                current_sum += 1
+                if current_sum == total_par:
+                    break
+    elif current_sum > total_par:
+        # Decrease to 3 for some holes (typical par 3 index positions: 2, 7, 5)
+        par_3_candidates = [2, 7, 5] + list(range(num_holes))
+        for idx in par_3_candidates:
+            if idx < num_holes and pars[idx] > 3:
+                pars[idx] -= 1
+                current_sum -= 1
+                if current_sum == total_par:
+                    break
+    return pars
+
+
 @router.get("/refresh")
 async def refresh_data(
     token: str = Query(...),
@@ -277,119 +337,112 @@ async def refresh_data(
             await asyncio.sleep(s["delay"])
 
             if s["stage"] == "importing":
-                # Perform database insert operations in a separate session
-                async with async_session_factory() as session:
-                    try:
-                        # 1. Fetch rounds for this player
-                        rounds_result = await session.execute(
-                            select(Round).where(Round.player_id == player_id)
+                try:
+                    async with async_session_factory() as session:
+                        # Load the scraped 18Birdies data file
+                        data_path = os.path.join(os.path.dirname(__file__), "..", "data", "18birdies_data.json")
+                        with open(data_path, "r") as f:
+                            data = json.load(f)
+
+                        # Update player display name in database to match the scraped account username
+                        player_result = await session.execute(
+                            select(Player).where(Player.id == player_id)
                         )
-                        existing_rounds = list(rounds_result.scalars().all())
+                        db_player = player_result.scalar_one_or_none()
+                        if db_player:
+                            db_player.display_name = data["myData"]["accountData"]["userName"]
 
-                        # 2. Check if we need to insert mock rounds or new rounds
-                        if len(existing_rounds) == 0:
-                            # Insert 3 mock rounds
-                            mock_rounds = [
-                                {
-                                    "course_name": "Pebble Beach Golf Links",
-                                    "tee_box": "Blue",
-                                    "total_score": 78,
-                                    "total_putts": 29,
-                                    "date_played": date(2026, 5, 10),
-                                    "pars": [4, 4, 4, 4, 3, 5, 3, 4, 4, 4, 4, 3, 4, 5, 4, 4, 3, 5],
-                                    "scores": [4, 5, 4, 4, 3, 5, 4, 4, 5, 4, 5, 3, 4, 6, 4, 4, 4, 5],
-                                },
-                                {
-                                    "course_name": "Augusta National Golf Club",
-                                    "tee_box": "Members",
-                                    "total_score": 82,
-                                    "total_putts": 31,
-                                    "date_played": date(2026, 5, 14),
-                                    "pars": [4, 5, 4, 3, 4, 3, 4, 5, 4, 4, 4, 3, 5, 4, 5, 3, 4, 4],
-                                    "scores": [5, 5, 4, 4, 5, 3, 5, 5, 4, 5, 5, 5, 5, 4, 6, 3, 5, 4],
-                                },
-                                {
-                                    "course_name": "Cypress Point Club",
-                                    "tee_box": "White",
-                                    "total_score": 85,
-                                    "total_putts": 33,
-                                    "date_played": date(2026, 5, 18),
-                                    "pars": [4, 4, 4, 3, 5, 5, 3, 4, 4, 4, 4, 3, 4, 5, 4, 4, 3, 4],
-                                    "scores": [5, 5, 5, 4, 5, 6, 3, 5, 4, 5, 5, 4, 5, 5, 5, 5, 5, 4],
-                                },
-                            ]
+                        # Store the raw scrape payload in raw_imports for history/activity feed
+                        raw_import = RawImport(
+                            user_id=user.id,
+                            source="scraper",
+                            filename="18birdies_scraped.json",
+                            raw_json=data,
+                            status="processed",
+                        )
+                        session.add(raw_import)
 
-                            for mr in mock_rounds:
-                                r_id = uuid.uuid4()
-                                new_round = Round(
-                                    id=r_id,
-                                    player_id=player_id,
-                                    course_name=mr["course_name"],
-                                    tee_box=mr["tee_box"],
-                                    total_score=mr["total_score"],
-                                    total_putts=mr["total_putts"],
-                                    date_played=mr["date_played"],
-                                )
-                                session.add(new_round)
+                        # Build played clubs ID-to-Name map
+                        club_map = {c["clubId"]: c["name"] for c in data["myData"]["clubData"]["playedClubs"]}
 
-                                # Create 18 HoleScores
-                                for idx, (par, score) in enumerate(zip(mr["pars"], mr["scores"])):
-                                    putts = 1 if score < par else (3 if score > par + 1 else 2)
-                                    fairway_hit = True if par in [4, 5] and (idx % 3 != 0) else None
-                                    gir = True if score <= par else False
-                                    session.add(
-                                        HoleScore(
-                                            round_id=r_id,
-                                            hole_number=idx + 1,
-                                            par=par,
-                                            score=score,
-                                            putts=putts,
-                                            fairway_hit=fairway_hit,
-                                            gir=gir,
-                                        )
-                                    )
-                        else:
-                            # Insert 1 new recent round
-                            new_course = "Pinehurst No. 2"
-                            new_date = date.today()
-                            # Check if Pinehurst No. 2 already exists for today to avoid duplicate inserts on repeated clicks
-                            dupe_check = await session.execute(
-                                select(Round).where(
-                                    Round.player_id == player_id,
-                                    Round.course_name == new_course,
-                                    Round.date_played == new_date,
-                                )
+                        # Import all 21 rounds dynamically
+                        for r in data["myData"]["activityData"]["rounds"]:
+                            round_id = uuid.UUID(r["id"])
+                            club_id = r["clubId"]["id"]
+                            course_name = club_map.get(club_id, "Unknown Course")
+                            timestamp_ms = r["timestamp"]
+                            date_played = date.fromtimestamp(timestamp_ms / 1000.0)
+                            total_score = r["strokes"]
+
+                            # Safely extract putts from round stats
+                            total_putts = r["stats"].get("putts", 0)
+                            if total_putts == 0:
+                                # Try recommended stats fallback
+                                for stat_item in r["stats"].get("recommendedStats", []):
+                                    if stat_item["type"] == "TOTAL_PUTTS":
+                                        total_putts = int(stat_item["value"])
+                                        break
+                            if total_putts == 0:
+                                total_putts = None
+
+                            # Check if the round is already imported to make the endpoint idempotent
+                            r_check = await session.execute(
+                                select(Round).where(Round.id == round_id)
                             )
-                            if dupe_check.scalar_one_or_none() is None:
-                                r_id = uuid.uuid4()
-                                new_round = Round(
-                                    id=r_id,
-                                    player_id=player_id,
-                                    course_name=new_course,
-                                    tee_box="Championship",
-                                    total_score=79,
-                                    total_putts=30,
-                                    date_played=new_date,
-                                )
-                                session.add(new_round)
+                            if r_check.scalar_one_or_none() is not None:
+                                continue
 
-                                pars = [4, 4, 4, 4, 5, 3, 4, 4, 3, 4, 4, 4, 3, 4, 3, 4, 3, 4]
-                                scores = [5, 4, 5, 4, 5, 4, 4, 5, 3, 5, 5, 4, 4, 5, 3, 5, 4, 4]
-                                for idx, (par, score) in enumerate(zip(pars, scores)):
-                                    putts = 1 if score < par else (3 if score > par + 1 else 2)
-                                    fairway_hit = True if par in [4, 5] and (idx % 3 != 0) else None
-                                    gir = True if score <= par else False
-                                    session.add(
-                                        HoleScore(
-                                            round_id=r_id,
-                                            hole_number=idx + 1,
-                                            par=par,
-                                            score=score,
-                                            putts=putts,
-                                            fairway_hit=fairway_hit,
-                                            gir=gir,
-                                        )
+                            # Query GolfCourseAPI for precise pars, otherwise fallback to heuristic par distribution
+                            pars = await get_course_pars(course_name)
+                            num_holes = len(r["holeStrokes"])
+
+                            if pars is None or len(pars) < num_holes:
+                                total_par = total_score - r["score"]
+                                pars = calculate_fallback_pars(num_holes, total_par)
+                            else:
+                                pars = pars[:num_holes]
+
+                            # Create Round
+                            new_round = Round(
+                                id=round_id,
+                                player_id=player_id,
+                                course_name=course_name,
+                                tee_box="Standard",
+                                total_score=total_score,
+                                total_putts=total_putts,
+                                date_played=date_played,
+                            )
+                            session.add(new_round)
+
+                            # Create HoleScores for each hole played
+                            for idx, score in enumerate(r["holeStrokes"]):
+                                par = pars[idx]
+                                hole_number = idx + 1
+
+                                # Distribute putts evenly as a clean heuristic
+                                hole_putt = None
+                                if total_putts is not None:
+                                    hole_putt = total_putts // num_holes
+                                    if idx < (total_putts % num_holes):
+                                        hole_putt += 1
+
+                                # Estimate GIR (Green in Regulation)
+                                if hole_putt is not None:
+                                    gir = (score - hole_putt) <= (par - 2)
+                                else:
+                                    gir = score <= par
+
+                                session.add(
+                                    HoleScore(
+                                        round_id=round_id,
+                                        hole_number=hole_number,
+                                        par=par,
+                                        score=score,
+                                        putts=hole_putt,
+                                        fairway_hit=None,
+                                        gir=gir,
                                     )
+                                )
 
                         # Update credential scrape status
                         session_cred_result = await session.execute(
@@ -404,16 +457,15 @@ async def refresh_data(
                             session_cred.scrape_status = "success"
 
                         await session.commit()
-                    except Exception as e:
-                        await session.rollback()
-                        # Yield a failure event
-                        error_data = {
-                            "progress": s["progress"],
-                            "stage": "failed",
-                            "message": f"Database import failed: {str(e)}",
-                        }
-                        yield f"event: scrape_progress\ndata: {json.dumps(error_data)}\n\n"
-                        return
+                except Exception as e:
+                    # Yield a failure event
+                    error_data = {
+                        "progress": s["progress"],
+                        "stage": "failed",
+                        "message": f"Database import failed: {str(e)}",
+                    }
+                    yield f"event: scrape_progress\ndata: {json.dumps(error_data)}\n\n"
+                    return
 
             yield f"event: scrape_progress\ndata: {json.dumps({'progress': s['progress'], 'stage': s['stage'], 'message': s['message']})}\n\n"
 

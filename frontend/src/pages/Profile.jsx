@@ -278,19 +278,6 @@ function Profile() {
               )}
             </button>
           </div>
-
-          {/* Recent Activity Placeholder */}
-          <div className="glass-card">
-            <h3 style={{ marginBottom: 'var(--space-lg)' }}>Recent Activity</h3>
-
-            <div className="empty-state" style={{ padding: 'var(--space-xl)' }}>
-              <div className="empty-state-icon">🏌️‍♂️</div>
-              <h3 style={{ fontSize: 'var(--font-base)' }}>No activity yet</h3>
-              <p style={{ fontSize: 'var(--font-sm)' }}>
-                Connect your account and refresh to see your latest rounds here.
-              </p>
-            </div>
-          </div>
         </div>
       </div>
     </div>

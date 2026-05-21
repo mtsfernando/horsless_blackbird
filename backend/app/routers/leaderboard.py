@@ -29,35 +29,39 @@ async def get_leaderboard(
     Returns:
         A list of players with their average scores, ordered ascending.
     """
-    stmt = (
-        select(
-            Player.id,
-            Player.display_name,
-            Player.avatar_url,
-            func.count(Round.id).label("rounds_played"),
-            func.avg(Round.total_score).label("avg_score"),
-            func.min(Round.total_score).label("best_score"),
-        )
-        .outerjoin(Round, Round.player_id == Player.id)
-        .group_by(Player.id, Player.display_name, Player.avatar_url)
-        .order_by(nulls_last(func.avg(Round.total_score).asc()))
-        .limit(limit)
+    # Fetch all players
+    result = await db.execute(select(Player))
+    players = result.scalars().all()
+
+    leaderboard_data = []
+    for player in players:
+        scores = []
+        for r in player.rounds:
+            score = r.total_score
+            num_holes = len(r.hole_scores)
+            if num_holes < 18:
+                score = score * 2
+            scores.append(score)
+
+        avg_score = sum(scores) / len(scores) if scores else None
+        best_score = min(scores) if scores else None
+
+        leaderboard_data.append({
+            "player_id": player.id,
+            "display_name": player.display_name,
+            "avatar_url": player.avatar_url,
+            "rounds_played": len(player.rounds),
+            "avg_score": round(float(avg_score), 1) if avg_score is not None else None,
+            "best_score": best_score,
+        })
+
+    # Sort leaderboard_data: players with rounds first (avg_score not None) ordered by avg_score ascending,
+    # then players with no rounds (avg_score is None).
+    leaderboard_data.sort(
+        key=lambda x: (x["avg_score"] is None, x["avg_score"] if x["avg_score"] is not None else 0)
     )
 
-    result = await db.execute(stmt)
-    rows = result.all()
-
-    return [
-        {
-            "player_id": row.id,
-            "display_name": row.display_name,
-            "avatar_url": row.avatar_url,
-            "rounds_played": row.rounds_played,
-            "avg_score": round(float(row.avg_score), 1) if row.avg_score else None,
-            "best_score": row.best_score,
-        }
-        for row in rows
-    ]
+    return leaderboard_data[:limit]
 
 
 @router.get("/stats")
@@ -78,16 +82,23 @@ async def get_leaderboard_stats(
     player_count_result = await db.execute(select(func.count(Player.id)))
     total_players = player_count_result.scalar() or 0
 
-    # Total rounds
-    round_count_result = await db.execute(select(func.count(Round.id)))
-    total_rounds = round_count_result.scalar() or 0
+    # Fetch all rounds to compute 18-hole equivalent average
+    result = await db.execute(select(Round))
+    rounds = result.scalars().all()
+    total_rounds = len(rounds)
 
-    # Overall average score
-    avg_result = await db.execute(select(func.avg(Round.total_score)))
-    overall_avg = avg_result.scalar()
+    scores = []
+    for r in rounds:
+        score = r.total_score
+        num_holes = len(r.hole_scores)
+        if num_holes < 18:
+            score = score * 2
+        scores.append(score)
+
+    overall_avg = sum(scores) / len(scores) if scores else None
 
     return {
         "total_players": total_players,
         "total_rounds": total_rounds,
-        "overall_avg_score": round(float(overall_avg), 1) if overall_avg else None,
+        "overall_avg_score": round(float(overall_avg), 1) if overall_avg is not None else None,
     }

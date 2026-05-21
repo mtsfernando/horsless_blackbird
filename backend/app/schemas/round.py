@@ -32,6 +32,8 @@ class RoundResponse(BaseModel):
     total_putts: int | None
     date_played: date
     created_at: datetime
+    holes_count: int = 18
+
 
 
 class RoundDetailResponse(RoundResponse):

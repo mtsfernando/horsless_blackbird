@@ -9,9 +9,9 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Python dependencies
-COPY requirements.txt .
+COPY requirements.txt requirements.lock ./
 ENV PIP_TRUSTED_HOST="pypi.org files.pythonhosted.org pypi.python.org"
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.lock
 
 # Install Playwright browsers
 RUN playwright install chromium --with-deps

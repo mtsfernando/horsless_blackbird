@@ -37,8 +37,6 @@ services:
       MAILGUN_API_KEY: ${MAILGUN_API_KEY:-}
       MAILGUN_DOMAIN: ${MAILGUN_DOMAIN:-}
       CORS_ORIGINS: ${CORS_ORIGINS:-["http://localhost:5173"]}
-    ports:
-      - "8000:8000"
     depends_on:
       db:
         condition: service_healthy
@@ -98,9 +96,6 @@ services:
       dockerfile: Dockerfile
     container_name: horseless-jenkins
     restart: unless-stopped
-    ports:
-      - "8080:8080"
-      - "50000:50000"
     volumes:
       - jenkins_home:/var/jenkins_home
     environment:

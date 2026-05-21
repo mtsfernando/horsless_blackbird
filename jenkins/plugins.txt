@@ -1,7 +1,6 @@
 workflow-aggregator:latest
 git:latest
 pipeline-stage-view:latest
-blueocean:latest
 credentials-binding:latest
 timestamper:latest
 ws-cleanup:latest

@@ -1,0 +1,21 @@
+# Ignore all files by default
+*
+
+# Allow the frontend directory
+!frontend
+
+# Allow the nginx directory
+!nginx
+
+# Exclude unnecessary subfolders from build context
+**/node_modules
+**/dist
+**/Dockerfile
+**/.git
+**/.idea
+**/.env*
+**/db
+**/backend
+**/scraper
+**/jenkins
+.DS_Store

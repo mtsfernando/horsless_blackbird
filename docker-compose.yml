@@ -4,6 +4,7 @@ services:
     image: postgres:16-alpine
     container_name: horseless-db
     restart: unless-stopped
+    mem_limit: 128m
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-postgres}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
@@ -28,6 +29,7 @@ services:
       dockerfile: Dockerfile
     container_name: horseless-backend
     restart: unless-stopped
+    mem_limit: 256m
     environment:
       DATABASE_URL: ${DATABASE_URL:-postgresql+asyncpg://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@db:5432/${POSTGRES_DB:-horseless}}
       SECRET_KEY: ${SECRET_KEY}
@@ -43,20 +45,6 @@ services:
     networks:
       - horseless-net
 
-  # ---- React Frontend ----
-  frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
-    container_name: horseless-frontend
-    restart: unless-stopped
-    ports:
-      - "5173:80"
-    depends_on:
-      - backend
-    networks:
-      - horseless-net
-
   # ---- Python Scraper ----
   scraper:
     build:
@@ -64,6 +52,9 @@ services:
       dockerfile: Dockerfile
     container_name: horseless-scraper
     restart: "no"
+    mem_limit: 256m
+    profiles:
+      - scraper
     environment:
       DATABASE_URL: ${DATABASE_URL:-postgresql+asyncpg://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@db:5432/${POSTGRES_DB:-horseless}}
       CREDENTIAL_ENCRYPTION_KEY: ${CREDENTIAL_ENCRYPTION_KEY}
@@ -73,20 +64,19 @@ services:
     networks:
       - horseless-net
 
-  # ---- NGINX Reverse Proxy ----
+  # ---- NGINX Reverse Proxy & Frontend Static server ----
   nginx:
     build:
-      context: ./nginx
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: nginx/Dockerfile
     container_name: horseless-nginx
     restart: unless-stopped
+    mem_limit: 64m
     ports:
       - "80:80"
       - "443:443"
     depends_on:
-      - frontend
       - backend
-      - jenkins
     networks:
       - horseless-net
 
@@ -97,10 +87,13 @@ services:
       dockerfile: Dockerfile
     container_name: horseless-jenkins
     restart: unless-stopped
+    mem_limit: 384m
+    profiles:
+      - jenkins
     volumes:
       - jenkins_home:/var/jenkins_home
     environment:
-      JAVA_OPTS: "-Djava.awt.headless=true -Djenkins.install.runSetupWizard=false"
+      JAVA_OPTS: "-Xms128m -Xmx256m -Djava.awt.headless=true -Djenkins.install.runSetupWizard=false"
     command: ["--prefix=/blackbird/admin/jenkins"]
     networks:
       - horseless-net

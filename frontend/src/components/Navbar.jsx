@@ -88,6 +88,17 @@ function Navbar() {
                   >
                     👤 Profile
                   </button>
+                  {user?.is_admin && (
+                    <button
+                      className="dropdown-item"
+                      onClick={() => {
+                        setDropdownOpen(false);
+                        window.open(`http://${window.location.hostname}:8080`, '_blank');
+                      }}
+                    >
+                      ⚙️ Jenkins UI
+                    </button>
+                  )}
                   <div className="dropdown-divider" />
                   <button className="dropdown-item" onClick={handleLogout}>
                     🚪 Logout

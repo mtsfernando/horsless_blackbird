@@ -1,9 +1,41 @@
+import { useState, useEffect } from 'react';
 import { useAuth } from '../hooks/useAuth';
 import { useScrapeProgress } from '../hooks/useScrapeProgress';
+import api from '../api/client';
 
 function Profile() {
   const { user } = useAuth();
   const { progress, stage, message, isActive, error, startScrape } = useScrapeProgress();
+
+  const [credStatus, setCredStatus] = useState(null);
+  const [birdiesEmail, setBirdiesEmail] = useState('');
+  const [birdiesPassword, setBirdiesPassword] = useState('');
+  const [isSaving, setIsSaving] = useState(false);
+  const [saveMessage, setSaveMessage] = useState('');
+
+  useEffect(() => {
+    api.get('/profile/credentials')
+      .then(res => setCredStatus(res))
+      .catch(err => console.error(err));
+  }, []);
+
+  const handleSaveCredentials = async () => {
+    setIsSaving(true);
+    setSaveMessage('');
+    try {
+      const res = await api.put('/profile/credentials', {
+        username: birdiesEmail,
+        password: birdiesPassword
+      });
+      setCredStatus(res);
+      setSaveMessage('Credentials saved successfully!');
+      setBirdiesPassword(''); // Clear password field after saving for security
+    } catch (err) {
+      setSaveMessage(err.message || 'Failed to save credentials');
+    } finally {
+      setIsSaving(false);
+    }
+  };
 
   return (
     <div className="page">
@@ -83,12 +115,30 @@ function Profile() {
           <div className="glass-card">
             <div className="flex-between" style={{ marginBottom: 'var(--space-lg)' }}>
               <h3>18Birdies Connection</h3>
-              <span className="badge badge-neutral">Not Connected</span>
+              {credStatus?.has_credentials ? (
+                <span className="badge badge-emerald">Connected</span>
+              ) : (
+                <span className="badge badge-neutral">Not Connected</span>
+              )}
             </div>
 
             <p className="text-secondary" style={{ fontSize: 'var(--font-sm)', marginBottom: 'var(--space-lg)' }}>
               Link your 18Birdies account to automatically import your rounds and stats.
             </p>
+
+            {saveMessage && (
+              <div style={{ 
+                marginBottom: 'var(--space-md)', 
+                padding: 'var(--space-sm)',
+                borderRadius: 'var(--radius-sm)',
+                backgroundColor: saveMessage.includes('success') ? 'rgba(16, 185, 129, 0.1)' : 'rgba(239, 68, 68, 0.1)',
+                border: `1px solid ${saveMessage.includes('success') ? 'var(--accent-emerald)' : 'var(--accent-ruby)'}`,
+                fontSize: 'var(--font-sm)', 
+                color: saveMessage.includes('success') ? 'var(--accent-emerald)' : 'var(--accent-ruby)' 
+              }}>
+                {saveMessage}
+              </div>
+            )}
 
             <div className="auth-form">
               <div className="input-group">
@@ -100,7 +150,8 @@ function Profile() {
                   type="email"
                   className="input-field"
                   placeholder="your-email@18birdies.com"
-                  disabled
+                  value={birdiesEmail}
+                  onChange={(e) => setBirdiesEmail(e.target.value)}
                 />
               </div>
               <div className="input-group">
@@ -111,12 +162,17 @@ function Profile() {
                   id="birdies-password"
                   type="password"
                   className="input-field"
-                  placeholder="••••••••"
-                  disabled
+                  placeholder={credStatus?.has_credentials ? "•••••••• (Saved)" : "••••••••"}
+                  value={birdiesPassword}
+                  onChange={(e) => setBirdiesPassword(e.target.value)}
                 />
               </div>
-              <button className="btn-secondary" disabled>
-                Save Credentials
+              <button 
+                className="btn-secondary" 
+                onClick={handleSaveCredentials}
+                disabled={isSaving || !birdiesEmail || !birdiesPassword}
+              >
+                {isSaving ? 'Saving...' : 'Save Credentials'}
               </button>
             </div>
           </div>

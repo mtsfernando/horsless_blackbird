@@ -24,6 +24,33 @@ function Profile() {
       .catch(err => console.error(err));
   }, []);
 
+  useEffect(() => {
+    if (!isActive && progress === 100) {
+      api.get('/profile/credentials')
+        .then(res => {
+          setCredStatus(res);
+          if (res?.username) {
+            setBirdiesEmail(res.username);
+          }
+        })
+        .catch(err => console.error(err));
+    }
+  }, [isActive, progress]);
+
+  const formatLastRefreshed = (dateStr) => {
+    if (!dateStr) return '';
+    const d = new Date(dateStr);
+    if (isNaN(d.getTime())) return '';
+    return d.toLocaleString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true
+    });
+  };
+
   const handleSaveCredentials = async () => {
     setIsSaving(true);
     setSaveMessage('');
@@ -277,6 +304,17 @@ function Profile() {
                 <>🔄 Refresh Data</>
               )}
             </button>
+
+            {credStatus?.last_scraped_at && (
+              <p style={{
+                fontSize: 'var(--font-xs)',
+                color: 'var(--text-muted)',
+                textAlign: 'center',
+                marginTop: 'var(--space-sm)'
+              }}>
+                Last Refreshed: {formatLastRefreshed(credStatus.last_scraped_at)}
+              </p>
+            )}
           </div>
         </div>
       </div>

@@ -48,8 +48,10 @@ export function useScrapeProgress() {
         setMessage(data.message ?? '');
 
         if (data.progress >= 100 || data.stage === 'complete') {
-          setIsActive(false);
-          cleanup();
+          cleanup(); // Close connection immediately
+          setTimeout(() => {
+            setIsActive(false);
+          }, 3000); // Keep progress bar visible for 3 seconds so the user can read the final message
         }
       } catch {
         // ignore parse errors

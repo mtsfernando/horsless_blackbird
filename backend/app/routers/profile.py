@@ -325,12 +325,12 @@ async def refresh_data(
 
     async def event_generator():
         stages = [
-            {"progress": 10, "stage": "auth", "message": "Authenticating 18Birdies credentials...", "delay": 1.0},
-            {"progress": 35, "stage": "fetching", "message": "Connected! Scraping scorecard index...", "delay": 1.5},
-            {"progress": 50, "stage": "downloading", "message": "Downloading round details and hole scores...", "delay": 1.5},
-            {"progress": 65, "stage": "importing", "message": "Importing scorecards to Horseless Blackbird database...", "delay": 1.0},
-            {"progress": 85, "stage": "updating", "message": "Recalculating handicap index and leaderboard standings...", "delay": 1.0},
-            {"progress": 100, "stage": "complete", "message": "Successfully imported rounds! Your dashboard has been updated.", "delay": 0.5},
+            {"progress": 10, "stage": "Teeing Off", "message": "Teeing off... Calibrating scraper swing and avoiding the water hazard 🌊", "delay": 1.5},
+            {"progress": 30, "stage": "Rough Search", "message": "Searching the thick rough... found three lost Titleists and your scorecards 🔎", "delay": 1.5},
+            {"progress": 55, "stage": "Sand Trap", "message": "Trapped in the database sand trap... blasting out cleanly onto the green 🏖️", "delay": 1.5},
+            {"progress": 75, "stage": "Green Reading", "message": "Reading the greens... calculating precise putts and adjusting for wind 💨", "delay": 1.5},
+            {"progress": 90, "stage": "Scorecard Check", "message": "Signing the official scorecard... hoping nobody notices those extra penalty strokes 📝", "delay": 1.5},
+            {"progress": 100, "stage": "19th Hole", "message": "19th Hole! Handicaps recalculated, dashboard refreshed, time for a cold one 🍻", "delay": 0.5},
         ]
 
         for s in stages:

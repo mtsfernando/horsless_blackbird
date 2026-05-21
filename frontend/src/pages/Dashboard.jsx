@@ -1,14 +1,26 @@
+import { useState } from 'react';
 import { useApi } from '../hooks/useApi';
 
 function Dashboard() {
   const { data: leaderboard, loading: leadLoading, error: leadError } = useApi('/leaderboard');
   const { data: stats, loading: statsLoading } = useApi('/leaderboard/stats');
+  const [selectedPlayerId, setSelectedPlayerId] = useState(null);
+
+  const selectedPlayer = leaderboard?.find(p => p.player_id === selectedPlayerId);
 
   const activePlayers = stats?.total_players ?? 0;
   const avgScore = stats?.overall_avg_score ? stats.overall_avg_score.toFixed(1) : '--';
   const totalRounds = stats?.total_rounds ?? 0;
   // Calculate average handicap across all players with scores
   const avgHandicap = stats?.overall_avg_score ? ((stats.overall_avg_score - 72) * 0.96).toFixed(1) : '--';
+
+  const handlePlayerClick = (playerId) => {
+    if (selectedPlayerId === playerId) {
+      setSelectedPlayerId(null);
+    } else {
+      setSelectedPlayerId(playerId);
+    }
+  };
 
   return (
     <div className="page">
@@ -20,25 +32,67 @@ function Dashboard() {
         <span className="badge badge-emerald">Live</span>
       </div>
 
+      {/* Selected Player Banner */}
+      {selectedPlayer && (
+        <div style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          background: 'rgba(16, 185, 129, 0.08)',
+          border: '1px solid rgba(16, 185, 129, 0.2)',
+          borderRadius: 'var(--radius-md)',
+          padding: 'var(--space-sm) var(--space-md)',
+          marginBottom: 'var(--space-lg)',
+          fontSize: 'var(--font-sm)',
+          animation: 'fadeIn 0.25s ease-out'
+        }}>
+          <span style={{ color: 'var(--accent-emerald-light)' }}>
+            Viewing stats for <strong>{selectedPlayer.display_name}</strong>
+          </span>
+          <button 
+            onClick={() => setSelectedPlayerId(null)}
+            style={{
+              background: 'transparent',
+              border: 'none',
+              color: 'var(--accent-emerald-light)',
+              cursor: 'pointer',
+              fontSize: 'var(--font-xs)',
+              fontWeight: 600,
+              display: 'flex',
+              alignItems: 'center',
+              gap: '4px'
+            }}
+          >
+            Reset to Overall ✕
+          </button>
+        </div>
+      )}
+
       {/* Stats Overview */}
       <div className="grid-3 stagger-children" style={{ marginBottom: 'var(--space-xl)' }}>
-        <div className="glass-card stat-card">
+        <div className="glass-card stat-card" style={{ border: selectedPlayer ? '1px solid var(--accent-gold)' : '1px solid var(--glass-border)', transition: 'border 0.3s ease' }}>
           <div className="stat-value stat-value-gold">
-            {statsLoading ? '...' : avgScore}
+            {statsLoading ? '...' : (selectedPlayer ? (selectedPlayer.avg_score ? selectedPlayer.avg_score.toFixed(1) : '--') : avgScore)}
           </div>
-          <div className="stat-label">Avg Score</div>
+          <div className="stat-label">
+            {selectedPlayer ? `${selectedPlayer.display_name.split(' ')[0]}'s Avg Score` : 'Avg Score'}
+          </div>
         </div>
-        <div className="glass-card stat-card">
+        <div className="glass-card stat-card" style={{ border: selectedPlayer ? '1px solid var(--accent-emerald)' : '1px solid var(--glass-border)', transition: 'border 0.3s ease' }}>
           <div className="stat-value">
-            {statsLoading ? '...' : totalRounds}
+            {statsLoading ? '...' : (selectedPlayer ? selectedPlayer.rounds_played : totalRounds)}
           </div>
-          <div className="stat-label">Rounds Played</div>
+          <div className="stat-label">
+            {selectedPlayer ? `${selectedPlayer.display_name.split(' ')[0]}'s Rounds` : 'Rounds Played'}
+          </div>
         </div>
-        <div className="glass-card stat-card">
+        <div className="glass-card stat-card" style={{ border: selectedPlayer ? '1px solid var(--accent-emerald)' : '1px solid var(--glass-border)', transition: 'border 0.3s ease' }}>
           <div className="stat-value stat-value-emerald">
-            {statsLoading ? '...' : avgHandicap}
+            {statsLoading ? '...' : (selectedPlayer ? (selectedPlayer.avg_score ? ((selectedPlayer.avg_score - 72) * 0.96).toFixed(1) : '--') : avgHandicap)}
           </div>
-          <div className="stat-label">Avg Handicap</div>
+          <div className="stat-label">
+            {selectedPlayer ? `${selectedPlayer.display_name.split(' ')[0]}'s Handicap` : 'Avg Handicap'}
+          </div>
         </div>
       </div>
 
@@ -79,21 +133,24 @@ function Dashboard() {
                 const handicapVal = player.avg_score ? ((player.avg_score - 72) * 0.96).toFixed(1) : '--';
                 const avgScoreVal = player.avg_score ? Math.round(player.avg_score) : '--';
                 const bestScoreVal = player.best_score ?? '--';
+                const isSelected = selectedPlayerId === player.player_id;
 
                 return (
                   <tr
                     key={player.player_id}
+                    onClick={() => handlePlayerClick(player.player_id)}
                     style={{
                       borderBottom: '1px solid rgba(16, 185, 129, 0.07)',
                       transition: 'background var(--transition-fast)',
                       cursor: 'pointer',
+                      background: isSelected ? 'rgba(16, 185, 129, 0.08)' : 'transparent',
                     }}
-                    onMouseEnter={(e) =>
-                      (e.currentTarget.style.background = 'var(--bg-hover)')
-                    }
-                    onMouseLeave={(e) =>
-                      (e.currentTarget.style.background = 'transparent')
-                    }
+                    onMouseEnter={(e) => {
+                      if (!isSelected) e.currentTarget.style.background = 'var(--bg-hover)';
+                    }}
+                    onMouseLeave={(e) => {
+                      if (!isSelected) e.currentTarget.style.background = 'transparent';
+                    }}
                   >
                     <td style={tdStyle}>
                       <span
@@ -114,7 +171,17 @@ function Dashboard() {
                     </td>
                     <td style={tdStyle}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-sm)' }}>
-                        <div className="avatar" style={{ width: 32, height: 32, fontSize: 'var(--font-xs)' }}>
+                        <div 
+                          className="avatar" 
+                          style={{ 
+                            width: 32, 
+                            height: 32, 
+                            fontSize: 'var(--font-xs)',
+                            border: isSelected ? '2px solid var(--accent-emerald)' : 'none',
+                            boxShadow: isSelected ? '0 0 8px rgba(16, 185, 129, 0.4)' : 'none',
+                            transition: 'border 0.2s ease, box-shadow 0.2s ease'
+                          }}
+                        >
                           {player.display_name
                             ? player.display_name
                                 .split(' ')
@@ -124,7 +191,15 @@ function Dashboard() {
                                 .slice(0, 2)
                             : '?'}
                         </div>
-                        <span style={{ fontWeight: 600 }}>{player.display_name || 'Golfer'}</span>
+                        <span 
+                          style={{ 
+                            fontWeight: isSelected ? 800 : 600,
+                            color: isSelected ? 'var(--accent-emerald-light)' : 'var(--text-primary)',
+                            transition: 'color 0.2s ease, font-weight 0.2s ease'
+                          }}
+                        >
+                          {player.display_name || 'Golfer'}
+                        </span>
                       </div>
                     </td>
                     <td style={tdStyle}>{player.rounds_played}</td>

@@ -65,6 +65,16 @@ function Navbar() {
                 Activity
               </NavLink>
             </li>
+            <li>
+              <NavLink
+                to="/profile"
+                className={({ isActive }) =>
+                  `navbar-link${isActive ? ' active' : ''}`
+                }
+              >
+                Profile
+              </NavLink>
+            </li>
           </ul>
         )}
 
@@ -89,15 +99,6 @@ function Navbar() {
                       {user?.email}
                     </div>
                   </div>
-                  <button
-                    className="dropdown-item"
-                    onClick={() => {
-                      setDropdownOpen(false);
-                      navigate('/profile');
-                    }}
-                  >
-                    👤 Profile
-                  </button>
 
                   <div className="dropdown-divider" />
                   <button className="dropdown-item" onClick={handleLogout}>

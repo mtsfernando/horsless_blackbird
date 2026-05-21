@@ -104,7 +104,8 @@ services:
     volumes:
       - jenkins_home:/var/jenkins_home
     environment:
-      JAVA_OPTS: "-Djava.awt.headless=true"
+      JAVA_OPTS: "-Djava.awt.headless=true -Djenkins.install.runSetupWizard=false"
+    command: ["--prefix=/blackbird/admin/jenkins"]
     networks:
       - horseless-net
 

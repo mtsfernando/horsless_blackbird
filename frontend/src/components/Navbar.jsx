@@ -93,7 +93,7 @@ function Navbar() {
                       className="dropdown-item"
                       onClick={() => {
                         setDropdownOpen(false);
-                        window.open(`http://${window.location.hostname}:8080`, '_blank');
+                        window.open(`${window.location.origin}/blackbird/admin/jenkins/`, '_blank');
                       }}
                     >
                       ⚙️ Jenkins UI

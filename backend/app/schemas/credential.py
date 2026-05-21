@@ -39,5 +39,6 @@ class CredentialStatusResponse(BaseModel):
     """Schema for a player's credential status summary."""
 
     has_credentials: bool
+    username: str | None = None
     last_scraped_at: datetime | None = None
     scrape_status: str | None = None

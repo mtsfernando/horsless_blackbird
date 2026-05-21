@@ -88,17 +88,7 @@ function Navbar() {
                   >
                     👤 Profile
                   </button>
-                  {user?.is_admin && (
-                    <button
-                      className="dropdown-item"
-                      onClick={() => {
-                        setDropdownOpen(false);
-                        window.open(`${window.location.origin}/blackbird/admin/jenkins/`, '_blank');
-                      }}
-                    >
-                      ⚙️ Jenkins UI
-                    </button>
-                  )}
+
                   <div className="dropdown-divider" />
                   <button className="dropdown-item" onClick={handleLogout}>
                     🚪 Logout

@@ -15,7 +15,12 @@ function Profile() {
 
   useEffect(() => {
     api.get('/profile/credentials')
-      .then(res => setCredStatus(res))
+      .then(res => {
+        setCredStatus(res);
+        if (res?.username) {
+          setBirdiesEmail(res.username);
+        }
+      })
       .catch(err => console.error(err));
   }, []);
 
@@ -23,15 +28,32 @@ function Profile() {
     setIsSaving(true);
     setSaveMessage('');
     try {
-      const res = await api.put('/profile/credentials', {
-        username: birdiesEmail,
-        password: birdiesPassword
-      });
+      const payload = { username: birdiesEmail };
+      if (birdiesPassword) {
+        payload.password = birdiesPassword;
+      }
+      const res = await api.put('/profile/credentials', payload);
       setCredStatus(res);
       setSaveMessage('Credentials saved successfully!');
       setBirdiesPassword(''); // Clear password field after saving for security
     } catch (err) {
       setSaveMessage(err.message || 'Failed to save credentials');
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handleDisconnect = async () => {
+    setIsSaving(true);
+    setSaveMessage('');
+    try {
+      await api.delete('/profile/credentials');
+      setCredStatus({ has_credentials: false, username: null });
+      setBirdiesEmail('');
+      setBirdiesPassword('');
+      setSaveMessage('Credentials disconnected successfully!');
+    } catch (err) {
+      setSaveMessage(err.message || 'Failed to disconnect credentials');
     } finally {
       setIsSaving(false);
     }
@@ -167,13 +189,25 @@ function Profile() {
                   onChange={(e) => setBirdiesPassword(e.target.value)}
                 />
               </div>
-              <button 
-                className="btn-secondary" 
-                onClick={handleSaveCredentials}
-                disabled={isSaving || !birdiesEmail || !birdiesPassword}
-              >
-                {isSaving ? 'Saving...' : 'Save Credentials'}
-              </button>
+              <div style={{ display: 'flex', gap: 'var(--space-sm)' }}>
+                <button 
+                  className="btn-secondary" 
+                  onClick={handleSaveCredentials}
+                  disabled={isSaving || !birdiesEmail || (!birdiesPassword && !credStatus?.has_credentials)}
+                >
+                  {isSaving ? 'Saving...' : 'Save Credentials'}
+                </button>
+                {credStatus?.has_credentials && (
+                  <button 
+                    className="btn-danger" 
+                    onClick={handleDisconnect}
+                    disabled={isSaving}
+                    style={{ backgroundColor: 'var(--accent-ruby)', color: 'white', border: 'none' }}
+                  >
+                    Disconnect
+                  </button>
+                )}
+              </div>
             </div>
           </div>
         </div>

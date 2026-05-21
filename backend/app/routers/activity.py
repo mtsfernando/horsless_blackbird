@@ -47,7 +47,7 @@ async def get_activity_feed(
     stmt = (
         select(RawImport)
         .where(RawImport.user_id == current_user.id)
-        .order_by(RawImport.created_at.desc())
+        .order_by(RawImport.imported_at.desc())
         .limit(1)
     )
     result = await db.execute(stmt)

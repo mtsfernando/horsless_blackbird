@@ -339,10 +339,38 @@ async def refresh_data(
             if s["stage"] == "importing":
                 try:
                     async with async_session_factory() as session:
-                        # Load the scraped 18Birdies data file
-                        data_path = os.path.join(os.path.dirname(__file__), "..", "data", "18birdies_data.json")
-                        with open(data_path, "r") as f:
-                            data = json.load(f)
+                        # Fetch the latest RawImport record for the user from the database
+                        import_stmt = (
+                            select(RawImport)
+                            .where(RawImport.user_id == user.id)
+                            .order_by(RawImport.imported_at.desc())
+                            .limit(1)
+                        )
+                        import_result = await session.execute(import_stmt)
+                        latest_import = import_result.scalar_one_or_none()
+
+                        if latest_import is None:
+                            # Simulate the scraper bot by decoding and inserting the mock data first
+                            from app.seed import MOCK_18BIRDIES_B64
+                            import base64
+                            import gzip
+                            compressed = base64.b64decode(MOCK_18BIRDIES_B64)
+                            data = json.loads(gzip.decompress(compressed).decode("utf-8"))
+
+                            latest_import = RawImport(
+                                user_id=user.id,
+                                source="scraper",
+                                filename="18birdies_scraped.json",
+                                raw_json=data,
+                                status="processed",
+                            )
+                            session.add(latest_import)
+                            await session.flush()
+                        else:
+                            data = latest_import.raw_json
+                            # If it was pending from the scraper bot, mark it as processed
+                            if latest_import.status == "pending":
+                                latest_import.status = "processed"
 
                         # Update player display name in database to match the scraped account username
                         player_result = await session.execute(
@@ -351,16 +379,6 @@ async def refresh_data(
                         db_player = player_result.scalar_one_or_none()
                         if db_player:
                             db_player.display_name = data["myData"]["accountData"]["userName"]
-
-                        # Store the raw scrape payload in raw_imports for history/activity feed
-                        raw_import = RawImport(
-                            user_id=user.id,
-                            source="scraper",
-                            filename="18birdies_scraped.json",
-                            raw_json=data,
-                            status="processed",
-                        )
-                        session.add(raw_import)
 
                         # Build played clubs ID-to-Name map
                         club_map = {c["clubId"]: c["name"] for c in data["myData"]["clubData"]["playedClubs"]}

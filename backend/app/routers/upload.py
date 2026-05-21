@@ -65,3 +65,37 @@ async def get_upload_history(
         }
         for imp in imports
     ]
+
+
+@router.post("/raw", status_code=status.HTTP_201_CREATED)
+async def upload_raw_json(
+    payload: dict,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+) -> dict:
+    """Upload a raw JSON payload directly to the database raw_imports table.
+
+    Args:
+        payload: The raw JSON data to import.
+        current_user: The authenticated user.
+        db: The async database session.
+
+    Returns:
+        A success message and the ID of the new raw import record.
+    """
+    raw_import = RawImport(
+        user_id=current_user.id,
+        source="scraper",
+        filename="scraper_upload.json",
+        raw_json=payload,
+        status="pending",
+    )
+    db.add(raw_import)
+    await db.commit()
+    await db.refresh(raw_import)
+    
+    return {
+        "status": "success",
+        "message": "Raw data imported successfully",
+        "import_id": str(raw_import.id),
+    }

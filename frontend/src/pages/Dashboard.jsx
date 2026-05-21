@@ -166,6 +166,14 @@ function Dashboard() {
           Detailed analytics, round-by-round breakdowns, and head-to-head comparisons are on the way.
         </p>
       </div>
+
+      {/* Brand Footer */}
+      <div style={{ textAlign: 'center', padding: 'var(--space-2xl) 0 var(--space-xl)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 'var(--space-sm)' }}>
+        <img src="/logo.png" alt="Horseless Blackbird" style={{ width: 36, height: 36, objectFit: 'contain', opacity: 0.4 }} />
+        <span style={{ fontSize: 'var(--font-xs)', color: 'var(--text-muted)', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+          Horseless Blackbird · Golf Tracker
+        </span>
+      </div>
     </div>
   );
 }

@@ -758,6 +758,18 @@ button {
   font-size: var(--font-2xl);
 }
 
+.navbar-logo {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+  filter: drop-shadow(0 0 6px rgba(16, 185, 129, 0.4));
+  transition: filter var(--transition-normal);
+}
+
+.navbar-brand:hover .navbar-logo {
+  filter: drop-shadow(0 0 10px rgba(16, 185, 129, 0.7));
+}
+
 .navbar-links {
   display: flex;
   align-items: center;

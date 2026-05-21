@@ -38,7 +38,7 @@ function Navbar() {
     <nav className="navbar">
       <div className="navbar-inner">
         <Link to="/" className="navbar-brand">
-          <span className="navbar-brand-icon">⛳</span>
+          <img src="/logo.png" alt="Horseless Blackbird" className="navbar-logo" />
           <span>Horseless Blackbird</span>
         </Link>
 

@@ -86,6 +86,7 @@ services:
     depends_on:
       - frontend
       - backend
+      - jenkins
     networks:
       - horseless-net
 

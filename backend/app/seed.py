@@ -15,6 +15,8 @@ from app.models.round import Round
 from app.models.hole_score import HoleScore
 from app.models.raw_import import RawImport
 from app.models.player import Player
+from app.models.credential import Credential
+from app.utils.encryption import encrypt
 from app.routers.profile import calculate_fallback_pars
 
 # Compact gzipped, base64-encoded mock 18Birdies data containing 21 rounds
@@ -142,12 +144,24 @@ async def seed_data() -> None:
                 "password": os.getenv("RANSIKA_SEED_PASSWORD", "RansikaPlayer2026!"),
                 "display_name": "Ransika Bellanage",
                 "is_admin": False,
+                "birdies_username": "sathira2000@gmail.com",
+                "birdies_password": "Bugatti@168",
             },
             {
                 "email": "aqeel.miskin@gmail.com",
                 "password": os.getenv("AQEEL_SEED_PASSWORD", "AqeelPlayer2026!"),
                 "display_name": "Aqeel Miskin",
                 "is_admin": False,
+                "birdies_username": "aqeelmiskin@gmail.com",
+                "birdies_password": "aqeelmiskin",
+            },
+            {
+                "email": "mariocsilva1998@gmail.com",
+                "password": "ThiliniMrPotatoHead6769",
+                "display_name": "Mario Silva",
+                "is_admin": False,
+                "birdies_username": "mariocsilva1998@gmail.com",
+                "birdies_password": "ThiliniMrPotatoHead6769",
             },
         ]
 
@@ -180,6 +194,28 @@ async def seed_data() -> None:
                     db.add(player)
                 else:
                     existing.player.display_name = u["display_name"]
+
+            # Create or update 18Birdies credentials if specified
+            if "birdies_username" in u and "birdies_password" in u:
+                await db.flush()
+                cred_stmt = select(Credential).where(
+                    Credential.player_id == user.player.id,
+                    Credential.provider == "18birdies"
+                )
+                cred_result = await db.execute(cred_stmt)
+                existing_cred = cred_result.scalar_one_or_none()
+                if existing_cred is None:
+                    print(f"Seeding 18Birdies credentials for {u['email']}...")
+                    db.add(Credential(
+                        player_id=user.player.id,
+                        provider="18birdies",
+                        username_enc=encrypt(u["birdies_username"]),
+                        password_enc=encrypt(u["birdies_password"]),
+                    ))
+                else:
+                    print(f"Updating 18Birdies credentials for {u['email']}...")
+                    existing_cred.username_enc = encrypt(u["birdies_username"])
+                    existing_cred.password_enc = encrypt(u["birdies_password"])
 
             # Automatically seed 18Birdies raw imports and rounds for the primary admin user
             if u["email"] == "thilina.fernando9@gmail.com":

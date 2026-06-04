@@ -1,5 +1,6 @@
 """Authentication service — user registration and login logic."""
 
+import uuid
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -85,3 +86,31 @@ async def authenticate_user(db: AsyncSession, email: str, password: str) -> User
     if not verify_password(password, user.password_hash):
         return None
     return user
+
+
+async def reset_user_password(db: AsyncSession, user_id: uuid.UUID | str, new_password: str) -> bool:
+    """Reset a user's password.
+
+    Args:
+        db: The async database session.
+        user_id: The UUID or string ID of the user.
+        new_password: The new plaintext password.
+
+    Returns:
+        True if password was updated, False otherwise.
+    """
+    if isinstance(user_id, str):
+        try:
+            user_id = uuid.UUID(user_id)
+        except ValueError:
+            return False
+
+    result = await db.execute(select(User).where(User.id == user_id))
+    user = result.scalar_one_or_none()
+    if user is None:
+        return False
+    user.password_hash = hash_password(new_password)
+    db.add(user)
+    await db.flush()
+    return True
+

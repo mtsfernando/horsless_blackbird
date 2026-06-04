@@ -1,27 +1,55 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../hooks/useAuth';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { post } from '../api/client';
 
-function Login() {
-  const { login } = useAuth();
+function ResetPassword() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const initialToken = searchParams.get('token') || '';
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [token, setToken] = useState(initialToken);
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
+  const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
+
+  function validate() {
+    if (!token.trim()) {
+      setError('Please provide a reset token.');
+      return false;
+    }
+    if (newPassword.length < 8) {
+      setError('Password must be at least 8 characters.');
+      return false;
+    }
+    if (newPassword !== confirmPassword) {
+      setError('Passwords do not match.');
+      return false;
+    }
+    return true;
+  }
 
   async function handleSubmit(e) {
     e.preventDefault();
     setError('');
-    setLoading(true);
+    setMessage('');
 
+    if (!validate()) return;
+
+    setLoading(true);
     try {
-      await login(email, password);
-      navigate('/');
+      await post('/auth/reset-password', {
+        token,
+        new_password: newPassword,
+      });
+      setMessage('Your password has been successfully reset.');
+      setTimeout(() => {
+        navigate('/login');
+      }, 2000);
     } catch (err) {
-      setError(err.message || 'Invalid credentials. Please try again.');
+      setError(err.message || 'Failed to reset password. Token may be invalid or expired.');
     } finally {
       setLoading(false);
     }
@@ -31,52 +59,50 @@ function Login() {
     <div className="auth-page">
       <div className="auth-card glass-card">
         <div className="auth-header">
-          <img src="/logo.png" alt="Horseless Blackbird" style={{ width: 72, height: 72, marginBottom: 'var(--space-md)', objectFit: 'contain' }} />
-          <h2>Welcome Back</h2>
+          <div style={{ fontSize: '3rem', marginBottom: 'var(--space-md)' }}>🔄</div>
+          <h2>Set New Password</h2>
           <p className="text-secondary">
-            Welcome back to the fairway. Sign in to track your game.
+            Enter your token and set a new password.
           </p>
         </div>
 
         {error && <div className="auth-error">{error}</div>}
+        {message && (
+          <div className="auth-error" style={{ background: 'rgba(16, 185, 129, 0.1)', borderColor: 'rgba(16, 185, 129, 0.25)', color: 'var(--accent-emerald-light)' }}>
+            {message}
+          </div>
+        )}
 
         <form className="auth-form" onSubmit={handleSubmit}>
           <div className="input-group">
-            <label className="input-label" htmlFor="email">
-              Email Address
+            <label className="input-label" htmlFor="token">
+              Reset Token
             </label>
             <input
-              id="email"
-              type="email"
+              id="token"
+              type="text"
               className="input-field"
-              placeholder="you@example.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Paste token here"
+              value={token}
+              onChange={(e) => setToken(e.target.value)}
               required
-              autoComplete="email"
-              autoFocus
             />
           </div>
 
           <div className="input-group">
-            <div className="auth-label-row">
-              <label className="input-label" htmlFor="password">
-                Password
-              </label>
-              <Link to="/forgot-password" className="forgot-password-link">
-                Forgot Password?
-              </Link>
-            </div>
+            <label className="input-label" htmlFor="newPassword">
+              New Password
+            </label>
             <div className="password-input-wrapper">
               <input
-                id="password"
+                id="newPassword"
                 type={showPassword ? 'text' : 'password'}
                 className="input-field"
-                placeholder="••••••••"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Minimum 8 characters"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
                 required
-                autoComplete="current-password"
+                autoComplete="new-password"
               />
               <button
                 type="button"
@@ -98,6 +124,21 @@ function Login() {
             </div>
           </div>
 
+          <div className="input-group">
+            <label className="input-label" htmlFor="confirmPassword">
+              Confirm New Password
+            </label>
+            <input
+              id="confirmPassword"
+              type="password"
+              className="input-field"
+              placeholder="Re-enter your new password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              required
+              autoComplete="new-password"
+            />
+          </div>
 
           <button
             type="submit"
@@ -108,21 +149,21 @@ function Login() {
             {loading ? (
               <>
                 <span className="spinner" />
-                Signing In...
+                Resetting Password...
               </>
             ) : (
-              'Sign In'
+              'Reset Password'
             )}
           </button>
         </form>
 
         <div className="auth-footer">
-          Don&apos;t have an account?{' '}
-          <Link to="/register">Create one</Link>
+          Remembered your password?{' '}
+          <Link to="/login">Sign in</Link>
         </div>
       </div>
     </div>
   );
 }
 
-export default Login;
+export default ResetPassword;

@@ -276,6 +276,208 @@ def calculate_fallback_pars(num_holes: int, total_par: int) -> list[int]:
     return pars
 
 
+@router.get("/refresh-all")
+async def refresh_all_players(
+    token: str = Query(...),
+    db: AsyncSession = Depends(get_db),
+):
+    """Trigger a data refresh for ALL players via Server-Sent Events (SSE)."""
+    credentials_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Could not validate credentials",
+    )
+    try:
+        payload = decode_access_token(token)
+        user_id_str: str | None = payload.get("sub")
+        if user_id_str is None:
+            raise credentials_exception
+        user_id = uuid.UUID(user_id_str)
+    except (JWTError, ValueError):
+        raise credentials_exception
+
+    # Check if requesting user exists
+    result = await db.execute(select(User).where(User.id == user_id))
+    user = result.scalar_one_or_none()
+    if user is None:
+        raise credentials_exception
+
+    async def event_generator():
+        # 1. Fetch all users from the database
+        async with async_session_factory() as session:
+            users_result = await session.execute(select(User))
+            users = users_result.scalars().all()
+        
+        total_users = len(users)
+        yield f"event: scrape_progress\ndata: {json.dumps({'progress': 5, 'stage': 'Initializing', 'message': f'Starting overall refresh for all {total_users} golfers... 🏌️'})}\n\n"
+        await asyncio.sleep(1.0)
+
+        for idx, u in enumerate(users):
+            # Check if this user has a player profile
+            async with async_session_factory() as session:
+                user_res = await session.execute(
+                    select(User).where(User.id == u.id)
+                )
+                db_user = user_res.scalar_one_or_none()
+                if not db_user or not db_user.player:
+                    continue
+                
+                player_id = db_user.player.id
+                player_name = db_user.player.display_name
+            
+            pct_start = int(5 + (idx / total_users) * 90)
+            yield f"event: scrape_progress\ndata: {json.dumps({'progress': pct_start, 'stage': 'Scraping', 'message': f'Driving down the fairway for {player_name}... ⛳'})}\n\n"
+            await asyncio.sleep(1.0)
+
+            # Perform the import logic for this user
+            try:
+                async with async_session_factory() as session:
+                    import_stmt = (
+                        select(RawImport)
+                        .where(RawImport.user_id == u.id)
+                        .order_by(RawImport.imported_at.desc())
+                        .limit(1)
+                    )
+                    import_result = await session.execute(import_stmt)
+                    latest_import = import_result.scalar_one_or_none()
+
+                    if latest_import is None:
+                        from app.seed import MOCK_18BIRDIES_B64
+                        import base64
+                        import gzip
+                        compressed = base64.b64decode(MOCK_18BIRDIES_B64)
+                        data = json.loads(gzip.decompress(compressed).decode("utf-8"))
+
+                        latest_import = RawImport(
+                            user_id=u.id,
+                            source="scraper",
+                            filename="18birdies_scraped.json",
+                            raw_json=data,
+                            status="processed",
+                        )
+                        session.add(latest_import)
+                        await session.flush()
+                    else:
+                        data = latest_import.raw_json
+                        if latest_import.status == "pending":
+                            latest_import.status = "processed"
+
+                    # Ensure display name doesn't get overwritten to Thilina Fernando
+                    player_result = await session.execute(
+                        select(Player).where(Player.id == player_id)
+                    )
+                    db_player = player_result.scalar_one_or_none()
+                    if db_player:
+                        if db_player.display_name and db_player.display_name not in ("Thilina Fernando", "Golfer", ""):
+                            data["myData"]["accountData"]["userName"] = db_player.display_name
+                        else:
+                            db_player.display_name = data["myData"]["accountData"]["userName"]
+
+                    club_map = {c["clubId"]: c["name"] for c in data["myData"]["clubData"]["playedClubs"]}
+
+                    for r in data["myData"]["activityData"]["rounds"]:
+                        round_id = uuid.UUID(r["id"])
+                        club_id = r["clubId"]["id"]
+                        course_name = club_map.get(club_id, "Unknown Course")
+                        timestamp_ms = r["timestamp"]
+                        date_played = date.fromtimestamp(timestamp_ms / 1000.0)
+                        total_score = r["strokes"]
+
+                        total_putts = r["stats"].get("putts", 0)
+                        if total_putts == 0:
+                            for stat_item in r["stats"].get("recommendedStats", []):
+                                if stat_item["type"] == "TOTAL_PUTTS":
+                                    total_putts = int(stat_item["value"])
+                                    break
+                        if total_putts == 0:
+                            total_putts = None
+
+                        r_check = await session.execute(
+                            select(Round).where(Round.id == round_id)
+                        )
+                        if r_check.scalar_one_or_none() is not None:
+                            continue
+
+                        pars = await get_course_pars(course_name)
+                        num_holes = len(r["holeStrokes"])
+
+                        if pars is None or len(pars) < num_holes:
+                            total_par = total_score - r["score"]
+                            pars = calculate_fallback_pars(num_holes, total_par)
+                        else:
+                            pars = pars[:num_holes]
+
+                        new_round = Round(
+                            id=round_id,
+                            player_id=player_id,
+                            course_name=course_name,
+                            tee_box="Standard",
+                            total_score=total_score,
+                            total_putts=total_putts,
+                            date_played=date_played,
+                        )
+                        session.add(new_round)
+
+                        for score_idx, score in enumerate(r["holeStrokes"]):
+                            par = pars[score_idx]
+                            hole_number = score_idx + 1
+
+                            hole_putt = None
+                            if total_putts is not None:
+                                hole_putt = total_putts // num_holes
+                                if score_idx < (total_putts % num_holes):
+                                    hole_putt += 1
+
+                            if hole_putt is not None:
+                                gir = (score - hole_putt) <= (par - 2)
+                            else:
+                                gir = score <= par
+
+                            session.add(
+                                HoleScore(
+                                    round_id=round_id,
+                                    hole_number=hole_number,
+                                    par=par,
+                                    score=score,
+                                    putts=hole_putt,
+                                    fairway_hit=None,
+                                    gir=gir,
+                                )
+                            )
+
+                    # Update credential last scraped timestamp
+                    session_cred_result = await session.execute(
+                        select(Credential).where(
+                            Credential.player_id == player_id,
+                            Credential.provider == "18birdies",
+                        )
+                    )
+                    session_cred = session_cred_result.scalar_one_or_none()
+                    if session_cred:
+                        session_cred.last_scraped_at = datetime.utcnow()
+                        session_cred.scrape_status = "success"
+
+                    await session.commit()
+                    
+                    pct_end = int(5 + ((idx + 1) / total_users) * 90)
+                    yield f"event: scrape_progress\ndata: {json.dumps({'progress': pct_end, 'stage': 'Scraping', 'message': f'Sunk the putt for {player_name}! 🕳️'})}\n\n"
+                    await asyncio.sleep(1.0)
+            except Exception as e:
+                yield f"event: scrape_progress\ndata: {json.dumps({'progress': pct_start, 'stage': 'failed', 'message': f'Failed for {player_name}: {str(e)}'})}\n\n"
+                await asyncio.sleep(1.0)
+
+        yield f"event: scrape_progress\ndata: {json.dumps({'progress': 100, 'stage': 'complete', 'message': '19th Hole! All golfers successfully refreshed! Time for a cold one 🍻'})}\n\n"
+
+    return StreamingResponse(
+        event_generator(),
+        media_type="text/event-stream",
+        headers={
+            "Cache-Control": "no-cache",
+            "Connection": "keep-alive",
+            "X-Accel-Buffering": "no",
+        },
+    )
+
+
 @router.get("/refresh")
 async def refresh_data(
     token: str = Query(...),
@@ -336,7 +538,7 @@ async def refresh_data(
         for s in stages:
             await asyncio.sleep(s["delay"])
 
-            if s["stage"] == "importing":
+            if s["stage"] == "Sand Trap":
                 try:
                     async with async_session_factory() as session:
                         # Fetch the latest RawImport record for the user from the database
@@ -378,7 +580,10 @@ async def refresh_data(
                         )
                         db_player = player_result.scalar_one_or_none()
                         if db_player:
-                            db_player.display_name = data["myData"]["accountData"]["userName"]
+                            if db_player.display_name and db_player.display_name not in ("Thilina Fernando", "Golfer", ""):
+                                data["myData"]["accountData"]["userName"] = db_player.display_name
+                            else:
+                                db_player.display_name = data["myData"]["accountData"]["userName"]
 
                         # Build played clubs ID-to-Name map
                         club_map = {c["clubId"]: c["name"] for c in data["myData"]["clubData"]["playedClubs"]}

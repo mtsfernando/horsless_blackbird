@@ -5,46 +5,49 @@
 
 /* ── CSS Custom Properties ─────────────────── */
 :root {
-  /* Background */
-  --bg-primary: #0a0f0d;
-  --bg-secondary: #141c17;
-  --bg-tertiary: #1a2620;
-  --bg-card: rgba(20, 28, 23, 0.8);
-  --bg-hover: rgba(16, 185, 129, 0.06);
+  /* Background (Masters Green Theme) */
+  --bg-primary: #041f17;
+  --bg-secondary: #082c21;
+  --bg-tertiary: #0c3b2e;
+  --bg-card: rgba(8, 44, 33, 0.85);
+  --bg-hover: rgba(236, 193, 0, 0.08);
 
   /* Text */
-  --text-primary: #e8ede9;
-  --text-secondary: #8b9a8f;
-  --text-muted: #5a6b5e;
-  --text-inverse: #0a0f0d;
+  --text-primary: #ffffff;
+  --text-secondary: #a3bfae;
+  --text-muted: #6b8e79;
+  --text-inverse: #041f17;
 
-  /* Accent */
-  --accent-emerald: #10B981;
-  --accent-emerald-light: #34D399;
-  --accent-emerald-dark: #059669;
-  --accent-emerald-glow: rgba(16, 185, 129, 0.3);
-  --accent-gold: #F59E0B;
-  --accent-gold-light: #FBBF24;
-  --accent-gold-dark: #D97706;
-  --accent-gold-glow: rgba(245, 158, 11, 0.2);
+  /* Accent (Masters Yellow) */
+  --accent-emerald: #ecc100;
+  --accent-emerald-light: #f7d117;
+  --accent-emerald-dark: #c69d00;
+  --accent-emerald-glow: rgba(236, 193, 0, 0.25);
+  
+  /* Accent Secondary (Masters Green) */
+  --accent-gold: #13513c;
+  --accent-gold-light: #1c7356;
+  --accent-gold-dark: #0b3527;
+  --accent-gold-glow: rgba(19, 81, 60, 0.2);
+  
   --accent-red: #EF4444;
   --accent-red-glow: rgba(239, 68, 68, 0.25);
 
   /* Glassmorphism */
-  --glass-bg: rgba(20, 28, 23, 0.6);
-  --glass-bg-hover: rgba(20, 28, 23, 0.75);
-  --glass-border: rgba(16, 185, 129, 0.15);
-  --glass-border-hover: rgba(16, 185, 129, 0.3);
-  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-  --glass-shadow-hover: 0 12px 48px rgba(0, 0, 0, 0.5);
+  --glass-bg: rgba(8, 44, 33, 0.65);
+  --glass-bg-hover: rgba(8, 44, 33, 0.8);
+  --glass-border: rgba(236, 193, 0, 0.15);
+  --glass-border-hover: rgba(236, 193, 0, 0.35);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.45);
+  --glass-shadow-hover: 0 12px 48px rgba(0, 0, 0, 0.55);
 
   /* Gradients */
-  --gradient-primary: linear-gradient(135deg, #10B981, #059669);
-  --gradient-primary-hover: linear-gradient(135deg, #34D399, #10B981);
-  --gradient-gold: linear-gradient(135deg, #F59E0B, #D97706);
-  --gradient-gold-hover: linear-gradient(135deg, #FBBF24, #F59E0B);
-  --gradient-dark: linear-gradient(180deg, #0a0f0d 0%, #141c17 100%);
-  --gradient-radial: radial-gradient(ellipse at 50% 0%, rgba(16, 185, 129, 0.08) 0%, transparent 60%);
+  --gradient-primary: linear-gradient(135deg, #13513c, #082c21);
+  --gradient-primary-hover: linear-gradient(135deg, #1c7356, #13513c);
+  --gradient-gold: linear-gradient(135deg, #f7d117, #ecc100);
+  --gradient-gold-hover: linear-gradient(135deg, #ffe047, #f7d117);
+  --gradient-dark: linear-gradient(180deg, #041f17 0%, #082c21 100%);
+  --gradient-radial: radial-gradient(ellipse at 50% 0%, rgba(236, 193, 0, 0.08) 0%, transparent 60%);
   --gradient-danger: linear-gradient(135deg, #EF4444, #DC2626);
 
   /* Border Radius */
@@ -86,6 +89,46 @@
   --z-sticky: 200;
   --z-modal: 300;
   --z-toast: 400;
+}
+
+[data-theme="light"] {
+  /* Background (Masters Light Theme) */
+  --bg-primary: #f4f7f5;
+  --bg-secondary: #e4ede7;
+  --bg-tertiary: #d2ded5;
+  --bg-card: rgba(255, 255, 255, 0.88);
+  --bg-hover: rgba(19, 81, 60, 0.06);
+
+  /* Text */
+  --text-primary: #06261c;
+  --text-secondary: #2b4f41;
+  --text-muted: #527364;
+  --text-inverse: #ffffff;
+
+  /* Accent (Masters Green) */
+  --accent-emerald: #13513c;
+  --accent-emerald-light: #1c7356;
+  --accent-emerald-dark: #0b3527;
+  --accent-emerald-glow: rgba(19, 81, 60, 0.15);
+  
+  /* Accent Secondary (Masters Yellow) */
+  --accent-gold: #ecc100;
+  --accent-gold-light: #f7d117;
+  --accent-gold-dark: #c69d00;
+  --accent-gold-glow: rgba(236, 193, 0, 0.15);
+
+  /* Glassmorphism */
+  --glass-bg: rgba(255, 255, 255, 0.78);
+  --glass-bg-hover: rgba(255, 255, 255, 0.88);
+  --glass-border: rgba(19, 81, 60, 0.12);
+  --glass-border-hover: rgba(19, 81, 60, 0.28);
+  --glass-shadow: 0 8px 32px rgba(19, 81, 60, 0.08);
+  --glass-shadow-hover: 0 12px 48px rgba(19, 81, 60, 0.14);
+
+  /* Gradients */
+  --gradient-primary: linear-gradient(135deg, #13513c, #0b3527);
+  --gradient-primary-hover: linear-gradient(135deg, #1c7356, #13513c);
+  --gradient-radial: radial-gradient(ellipse at 50% 0%, rgba(19, 81, 60, 0.05) 0%, transparent 60%);
 }
 
 /* ── Global Reset ──────────────────────────── */
@@ -1190,3 +1233,57 @@ button {
   outline: 2px solid var(--accent-emerald);
   outline-offset: 2px;
 }
+
+/* Smooth Transitions for Light/Dark Theme Switching */
+body, .navbar, .glass-card, .dropdown-menu, .theme-toggle-btn, h1, h2, h3, h4, h5, h6, p, td, th, .badge, .stat-value {
+  transition: background-color var(--transition-normal), 
+              background var(--transition-normal), 
+              border-color var(--transition-normal), 
+              color var(--transition-normal),
+              box-shadow var(--transition-normal);
+}
+
+/* Mobile Dropdown Navigation inside Avatar Menu */
+.mobile-nav-links {
+  display: none;
+}
+
+@media (max-width: 768px), (max-height: 500px) {
+  .mobile-nav-links {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding-top: var(--space-xs);
+    border-top: 1px solid var(--glass-border);
+    margin-top: var(--space-xs);
+  }
+}
+
+/* Mobile Landscape Header & Viewport Fixes */
+@media (max-height: 500px) and (orientation: landscape) {
+  .navbar {
+    position: sticky !important;
+    top: 0 !important;
+    height: 54px !important;
+    padding: 0 var(--space-md) !important;
+  }
+  .navbar-inner {
+    height: 100% !important;
+  }
+  .navbar-links {
+    display: none !important;
+  }
+  .navbar-logo {
+    height: 22px !important;
+  }
+  .page {
+    padding-top: var(--space-sm) !important;
+  }
+  .auth-page {
+    min-height: calc(100vh - 54px) !important;
+  }
+  .loading-page {
+    min-height: calc(100vh - 54px) !important;
+  }
+}
+

@@ -7,6 +7,23 @@ function Navbar() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
   const navigate = useNavigate();
+  
+  // Theme toggle state and effect
+  const [theme, setTheme] = useState(localStorage.getItem('blackbird-theme') || 'dark');
+
+  useEffect(() => {
+    if (theme === 'light') {
+      document.documentElement.setAttribute('data-theme', 'light');
+    } else {
+      document.documentElement.removeAttribute('data-theme');
+    }
+  }, [theme]);
+
+  function toggleTheme() {
+    const nextTheme = theme === 'light' ? 'dark' : 'light';
+    setTheme(nextTheme);
+    localStorage.setItem('blackbird-theme', nextTheme);
+  }
 
   useEffect(() => {
     function handleClickOutside(e) {
@@ -38,7 +55,6 @@ function Navbar() {
     <nav className="navbar">
       <div className="navbar-inner">
         <Link to="/" className="navbar-brand">
-          <img src="/logo.png" alt="Horseless Blackbird" className="navbar-logo" />
           <span>Horseless Blackbird</span>
         </Link>
 
@@ -79,6 +95,28 @@ function Navbar() {
         )}
 
         <div className="navbar-actions">
+          <button
+            className="theme-toggle-btn"
+            onClick={toggleTheme}
+            aria-label="Toggle theme"
+            style={{
+              background: 'transparent',
+              border: '1px solid var(--glass-border)',
+              color: 'var(--text-primary)',
+              fontSize: '1.1rem',
+              padding: '6px 10px',
+              borderRadius: 'var(--radius-sm)',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              marginRight: '8px',
+              transition: 'all var(--transition-fast)'
+            }}
+          >
+            🌓
+          </button>
+
           {isAuthenticated ? (
             <div className="dropdown" ref={dropdownRef}>
               <button
@@ -98,6 +136,18 @@ function Navbar() {
                     <div style={{ fontSize: 'var(--font-xs)', color: 'var(--text-muted)' }}>
                       {user?.email}
                     </div>
+                  </div>
+
+                  <div className="mobile-nav-links">
+                    <NavLink to="/" end className="dropdown-item" onClick={() => setDropdownOpen(false)}>
+                      📊 Dashboard
+                    </NavLink>
+                    <NavLink to="/activity" className="dropdown-item" onClick={() => setDropdownOpen(false)}>
+                      🏌️ Activity
+                    </NavLink>
+                    <NavLink to="/profile" className="dropdown-item" onClick={() => setDropdownOpen(false)}>
+                      👤 Profile
+                    </NavLink>
                   </div>
 
                   <div className="dropdown-divider" />

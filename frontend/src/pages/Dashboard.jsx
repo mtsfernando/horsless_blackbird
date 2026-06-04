@@ -260,8 +260,7 @@ function Dashboard() {
       </div>
 
       {/* Brand Footer */}
-      <div style={{ textAlign: 'center', padding: 'var(--space-2xl) 0 var(--space-xl)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 'var(--space-sm)' }}>
-        <img src="/logo.png" alt="Horseless Blackbird" style={{ width: 36, height: 36, objectFit: 'contain', opacity: 0.4 }} />
+      <div style={{ textAlign: 'center', padding: 'var(--space-xl) 0', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <span style={{ fontSize: 'var(--font-xs)', color: 'var(--text-muted)', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
           Horseless Blackbird · Golf Tracker
         </span>

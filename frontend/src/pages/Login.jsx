@@ -31,7 +31,7 @@ function Login() {
     <div className="auth-page">
       <div className="auth-card glass-card">
         <div className="auth-header">
-          <img src="/logo.png" alt="Horseless Blackbird" style={{ width: 72, height: 72, marginBottom: 'var(--space-md)', objectFit: 'contain' }} />
+          <h1 style={{ fontSize: '2rem', fontWeight: 800, color: 'var(--text-primary)', letterSpacing: '-0.02em', marginBottom: 'var(--space-xs)' }}>Horseless Blackbird</h1>
           <h2>Welcome Back</h2>
           <p className="text-secondary">
             Welcome back to the fairway. Sign in to track your game.

@@ -1,28 +1,22 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { post } from '../api/client';
 
 function ForgotPassword() {
-  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
-  const [devToken, setDevToken] = useState('');
   const [loading, setLoading] = useState(false);
 
   async function handleSubmit(e) {
     e.preventDefault();
     setError('');
     setMessage('');
-    setDevToken('');
     setLoading(true);
 
     try {
       const response = await post('/auth/forgot-password', { email });
       setMessage(response.message || 'If the email exists, a password reset link has been sent.');
-      if (response.dev_token) {
-        setDevToken(response.dev_token);
-      }
     } catch (err) {
       setError(err.message || 'Something went wrong. Please try again.');
     } finally {
@@ -37,7 +31,7 @@ function ForgotPassword() {
           <div style={{ fontSize: '3rem', marginBottom: 'var(--space-md)' }}>🔑</div>
           <h2>Reset Password</h2>
           <p className="text-secondary">
-            Enter your email address and we will provide a recovery token.
+            Enter your email address and we will send you a reset link.
           </p>
         </div>
 
@@ -48,7 +42,7 @@ function ForgotPassword() {
           </div>
         )}
 
-        {!devToken ? (
+        {!message ? (
           <form className="auth-form" onSubmit={handleSubmit}>
             <div className="input-group">
               <label className="input-label" htmlFor="email">
@@ -78,30 +72,19 @@ function ForgotPassword() {
                   Sending Request...
                 </>
               ) : (
-                'Request Reset Token'
+                'Send Reset Link'
               )}
             </button>
           </form>
         ) : (
           <div style={{ marginTop: 'var(--space-md)' }}>
-            <div className="input-group" style={{ marginBottom: 'var(--space-md)' }}>
-              <label className="input-label">Dev Mode Recovery Token:</label>
-              <textarea
-                className="input-field"
-                readOnly
-                rows={4}
-                value={devToken}
-                style={{ fontFamily: 'monospace', fontSize: 'var(--font-xs)', resize: 'none' }}
-              />
-            </div>
-            <button
-              type="button"
+            <Link
+              to="/login"
               className="btn-primary btn-lg"
-              style={{ width: '100%' }}
-              onClick={() => navigate(`/reset-password?token=${encodeURIComponent(devToken)}`)}
+              style={{ display: 'block', textAlign: 'center', width: '100%' }}
             >
-              Proceed to Reset Password
-            </button>
+              Return to Sign In
+            </Link>
           </div>
         )}
 

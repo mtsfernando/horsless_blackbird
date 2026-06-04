@@ -7,6 +7,10 @@
 # Allow the nginx directory
 !nginx
 
+# Allow the portfolio directory
+!portfolio
+
+
 # Exclude unnecessary subfolders from build context
 **/node_modules
 **/dist

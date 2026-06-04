@@ -1,6 +1,32 @@
 import { useState } from 'react';
 import { useApi } from '../hooks/useApi';
 
+const GOLFER_AVATARS = [
+  { id: 'tiger', emoji: '🐅' },
+  { id: 'lefty', emoji: '👍' },
+  { id: 'arnie', emoji: '🍹' },
+  { id: 'bear', emoji: '🐻' },
+  { id: 'scientist', emoji: '🧪' },
+  { id: 'wild', emoji: '🍺' },
+  { id: 'climber', emoji: '🌳' },
+  { id: 'gymbro', emoji: '😒' },
+  { id: 'shamrock', emoji: '☘️' },
+  { id: 'queen', emoji: '👑' }
+];
+
+const renderAvatar = (player) => {
+  const matched = GOLFER_AVATARS.find(a => a.id === player.avatar_url);
+  if (matched) return matched.emoji;
+  return player.display_name
+    ? player.display_name
+        .split(' ')
+        .map((w) => w[0])
+        .join('')
+        .toUpperCase()
+        .slice(0, 2)
+    : '?';
+};
+
 function Dashboard() {
   const { data: leaderboard, loading: leadLoading, error: leadError } = useApi('/leaderboard');
   const { data: stats, loading: statsLoading } = useApi('/leaderboard/stats');
@@ -176,20 +202,17 @@ function Dashboard() {
                           style={{ 
                             width: 32, 
                             height: 32, 
-                            fontSize: 'var(--font-xs)',
+                            fontSize: player.avatar_url ? '1.5rem' : 'var(--font-xs)',
                             border: isSelected ? '2px solid var(--accent-emerald)' : 'none',
                             boxShadow: isSelected ? '0 0 8px rgba(16, 185, 129, 0.4)' : 'none',
-                            transition: 'border 0.2s ease, box-shadow 0.2s ease'
+                            transition: 'border 0.2s ease, box-shadow 0.2s ease',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            background: player.avatar_url ? 'var(--bg-tertiary)' : 'var(--gradient-primary)'
                           }}
                         >
-                          {player.display_name
-                            ? player.display_name
-                                .split(' ')
-                                .map((w) => w[0])
-                                .join('')
-                                .toUpperCase()
-                                .slice(0, 2)
-                            : '?'}
+                          {renderAvatar(player)}
                         </div>
                         <span 
                           style={{ 

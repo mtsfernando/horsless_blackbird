@@ -3,6 +3,19 @@ import { useAuth } from '../hooks/useAuth';
 import { useScrapeProgress } from '../hooks/useScrapeProgress';
 import api from '../api/client';
 
+const GOLFER_AVATARS = [
+  { id: 'tiger', name: 'The Big Cat', golfer: 'Tiger Woods', emoji: '🐅' },
+  { id: 'lefty', name: "Lefty's Thumb", golfer: 'Phil Mickelson', emoji: '👍' },
+  { id: 'arnie', name: 'The Sweet Tea', golfer: 'Arnold Palmer', emoji: '🍹' },
+  { id: 'bear', name: 'The Golden Bear', golfer: 'Jack Nicklaus', emoji: '🐻' },
+  { id: 'scientist', name: 'The Golf Scientist', golfer: 'Bryson DeChambeau', emoji: '🧪' },
+  { id: 'wild', name: 'Wild Thing', golfer: 'John Daly', emoji: '🍺' },
+  { id: 'climber', name: 'The Tree Climber', golfer: 'Sergio Garcia', emoji: '🌳' },
+  { id: 'gymbro', name: 'The Gym Bro', golfer: 'Brooks Koepka', emoji: '😒' },
+  { id: 'shamrock', name: "Rory's Shamrock", golfer: 'Rory McIlroy', emoji: '☘️' },
+  { id: 'queen', name: 'LPGA Queen', golfer: 'Nelly Korda', emoji: '👑' }
+];
+
 function Profile() {
   const { user } = useAuth();
   const { progress, stage, message, isActive, error, startScrape } = useScrapeProgress();
@@ -13,6 +26,30 @@ function Profile() {
   const [isSaving, setIsSaving] = useState(false);
   const [saveMessage, setSaveMessage] = useState('');
 
+  // Player profile & stats states
+  const [profileData, setProfileData] = useState(null);
+  const [playerStats, setPlayerStats] = useState({ rounds: '—', avgScore: '—', handicap: '—' });
+  const [showAvatarSelector, setShowAvatarSelector] = useState(false);
+  const [hoveredAvatar, setHoveredAvatar] = useState(null);
+
+  const fetchProfileAndStats = async () => {
+    try {
+      const profile = await api.get('/profile');
+      setProfileData(profile);
+      const lead = await api.get('/leaderboard');
+      const pStats = lead.find(p => p.player_id === profile.id);
+      if (pStats) {
+        setPlayerStats({
+          rounds: pStats.rounds_played ?? '—',
+          avgScore: pStats.avg_score ? Math.round(pStats.avg_score) : '—',
+          handicap: pStats.avg_score ? ((pStats.avg_score - 72) * 0.96).toFixed(1) : '—'
+        });
+      }
+    } catch (err) {
+      console.error('Error fetching profile or stats:', err);
+    }
+  };
+
   useEffect(() => {
     api.get('/profile/credentials')
       .then(res => {
@@ -22,6 +59,8 @@ function Profile() {
         }
       })
       .catch(err => console.error(err));
+
+    fetchProfileAndStats();
   }, []);
 
   useEffect(() => {
@@ -34,6 +73,8 @@ function Profile() {
           }
         })
         .catch(err => console.error(err));
+
+      fetchProfileAndStats();
     }
   }, [isActive, progress]);
 
@@ -61,7 +102,11 @@ function Profile() {
       }
       const res = await api.put('/profile/credentials', payload);
       setCredStatus(res);
-      setSaveMessage('Credentials saved successfully!');
+      if (res.scrape_status === 'failed') {
+        setSaveMessage('Connection failed: check your email/password');
+      } else {
+        setSaveMessage('Credentials saved successfully!');
+      }
       setBirdiesPassword(''); // Clear password field after saving for security
     } catch (err) {
       setSaveMessage(err.message || 'Failed to save credentials');
@@ -86,6 +131,20 @@ function Profile() {
     }
   };
 
+  const handleSelectAvatar = async (avatarId) => {
+    try {
+      const res = await api.put('/profile', { avatar_url: avatarId });
+      setProfileData(res);
+      setShowAvatarSelector(false);
+      // Refresh statistics (including leaderboard rankings/avatars)
+      fetchProfileAndStats();
+    } catch (err) {
+      console.error('Failed to update avatar:', err);
+    }
+  };
+
+  const matchedAvatar = GOLFER_AVATARS.find(a => a.id === profileData?.avatar_url);
+
   return (
     <div className="page">
       <div className="section-header">
@@ -100,21 +159,38 @@ function Profile() {
         <div className="stagger-children" style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-lg)' }}>
           {/* My Profile Card */}
           <div className="glass-card">
-            <div className="flex-between" style={{ marginBottom: 'var(--space-lg)' }}>
-              <h3>My Profile</h3>
+            <div className="flex-between" style={{ marginBottom: 'var(--space-lg)', justifyContent: 'flex-end' }}>
               <button className="btn-secondary btn-sm">Edit</button>
             </div>
 
             <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-lg)' }}>
-              <div className="avatar avatar-xl">
-                {user?.display_name
-                  ? user.display_name
-                      .split(' ')
-                      .map((w) => w[0])
-                      .join('')
-                      .toUpperCase()
-                      .slice(0, 2)
-                  : '?'}
+              <div 
+                className="avatar avatar-xl"
+                style={{ 
+                  cursor: 'pointer', 
+                  userSelect: 'none',
+                  fontSize: matchedAvatar ? '3.5rem' : 'inherit',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  background: matchedAvatar ? 'var(--bg-tertiary)' : 'var(--gradient-primary)',
+                  border: '2px dashed rgba(16, 185, 129, 0.4)'
+                }}
+                onClick={() => setShowAvatarSelector(!showAvatarSelector)}
+                title="Click to select a cheeky golfer avatar!"
+              >
+                {matchedAvatar ? (
+                  matchedAvatar.emoji
+                ) : (
+                  user?.display_name
+                    ? user.display_name
+                        .split(' ')
+                        .map((w) => w[0])
+                        .join('')
+                        .toUpperCase()
+                        .slice(0, 2)
+                    : '?'
+                )}
               </div>
               <div>
                 <h3 style={{ marginBottom: 'var(--space-xs)' }}>
@@ -130,12 +206,69 @@ function Profile() {
               </div>
             </div>
 
+            {/* Avatar Selector Dropdown Grid */}
+            {showAvatarSelector && (
+              <div 
+                className="glass-card" 
+                style={{ 
+                  marginTop: 'var(--space-md)', 
+                  padding: 'var(--space-md)', 
+                  background: 'var(--bg-secondary)',
+                  border: '1.5px solid var(--accent-emerald)',
+                  animation: 'fadeIn 0.2s ease-out'
+                }}
+              >
+                <div className="flex-between" style={{ marginBottom: 'var(--space-sm)' }}>
+                  <h4 style={{ fontSize: 'var(--font-sm)', color: 'var(--text-secondary)' }}>Select A Cheeky Golfer Avatar</h4>
+                  <button 
+                    className="btn-ghost btn-sm" 
+                    onClick={() => setShowAvatarSelector(false)}
+                    style={{ padding: '2px 8px', fontSize: 'var(--font-xs)' }}
+                  >
+                    Close ✕
+                  </button>
+                </div>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 'var(--space-sm)' }}>
+                  {GOLFER_AVATARS.map((avatar) => {
+                    const isSelected = profileData?.avatar_url === avatar.id;
+                    return (
+                      <button
+                        key={avatar.id}
+                        type="button"
+                        onClick={() => handleSelectAvatar(avatar.id)}
+                        title={`${avatar.name} (Based on ${avatar.golfer})`}
+                        style={{
+                          fontSize: '2rem',
+                          background: isSelected ? 'rgba(16, 185, 129, 0.15)' : 'var(--bg-tertiary)',
+                          border: isSelected ? '2.5px solid var(--accent-emerald)' : '1.5px solid var(--glass-border)',
+                          borderRadius: 'var(--radius-md)',
+                          padding: '8px',
+                          cursor: 'pointer',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          transition: 'all 0.15s ease'
+                        }}
+                        onMouseEnter={() => setHoveredAvatar(avatar)}
+                        onMouseLeave={() => setHoveredAvatar(null)}
+                      >
+                        {avatar.emoji}
+                      </button>
+                    );
+                  })}
+                </div>
+                <div style={{ minHeight: '20px', marginTop: 'var(--space-sm)', textAlign: 'center', fontSize: 'var(--font-xs)', color: 'var(--text-muted)' }}>
+                  {hoveredAvatar ? `${hoveredAvatar.name} — Based on ${hoveredAvatar.golfer}` : 'Hover to see details'}
+                </div>
+              </div>
+            )}
+
             <div className="divider" />
 
             <div className="grid-3" style={{ textAlign: 'center' }}>
               <div>
                 <div style={{ fontSize: 'var(--font-2xl)', fontWeight: 700, color: 'var(--accent-emerald)' }}>
-                  —
+                  {playerStats.rounds}
                 </div>
                 <div style={{ fontSize: 'var(--font-xs)', color: 'var(--text-muted)', marginTop: 4 }}>
                   Rounds
@@ -143,7 +276,7 @@ function Profile() {
               </div>
               <div>
                 <div style={{ fontSize: 'var(--font-2xl)', fontWeight: 700, color: 'var(--accent-gold)' }}>
-                  —
+                  {playerStats.avgScore}
                 </div>
                 <div style={{ fontSize: 'var(--font-xs)', color: 'var(--text-muted)', marginTop: 4 }}>
                   Avg Score
@@ -151,7 +284,7 @@ function Profile() {
               </div>
               <div>
                 <div style={{ fontSize: 'var(--font-2xl)', fontWeight: 700 }}>
-                  —
+                  {playerStats.handicap}
                 </div>
                 <div style={{ fontSize: 'var(--font-xs)', color: 'var(--text-muted)', marginTop: 4 }}>
                   Handicap
@@ -165,7 +298,13 @@ function Profile() {
             <div className="flex-between" style={{ marginBottom: 'var(--space-lg)' }}>
               <h3>18Birdies Connection</h3>
               {credStatus?.has_credentials ? (
-                <span className="badge badge-emerald">Connected</span>
+                credStatus.scrape_status === 'failed' ? (
+                  <span className="badge badge-red">Connection Failed</span>
+                ) : credStatus.scrape_status === 'pending' ? (
+                  <span className="badge badge-gold">Pending</span>
+                ) : (
+                  <span className="badge badge-emerald">Connected</span>
+                )
               ) : (
                 <span className="badge badge-neutral">Not Connected</span>
               )}
@@ -180,10 +319,10 @@ function Profile() {
                 marginBottom: 'var(--space-md)', 
                 padding: 'var(--space-sm)',
                 borderRadius: 'var(--radius-sm)',
-                backgroundColor: saveMessage.includes('success') ? 'rgba(16, 185, 129, 0.1)' : 'rgba(239, 68, 68, 0.1)',
-                border: `1px solid ${saveMessage.includes('success') ? 'var(--accent-emerald)' : 'var(--accent-ruby)'}`,
+                backgroundColor: saveMessage.includes('successfully') ? 'rgba(16, 185, 129, 0.1)' : 'rgba(239, 68, 68, 0.1)',
+                border: `1px solid ${saveMessage.includes('successfully') ? 'var(--accent-emerald)' : 'var(--accent-ruby)'}`,
                 fontSize: 'var(--font-sm)', 
-                color: saveMessage.includes('success') ? 'var(--accent-emerald)' : 'var(--accent-ruby)' 
+                color: saveMessage.includes('successfully') ? 'var(--accent-emerald)' : 'var(--accent-ruby)' 
               }}>
                 {saveMessage}
               </div>

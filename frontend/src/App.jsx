@@ -124,7 +124,7 @@ function AppRoutes() {
 
 function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/blackbird">
       <AuthProvider>
         <AppRoutes />
       </AuthProvider>
